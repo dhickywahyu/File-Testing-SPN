@@ -1,0 +1,13 @@
+[Unit]
+Description=PCB QC Tester (web UI port 8080)
+After=network.target time-sync.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/PCBTester/raspi/app.py
+WorkingDirectory=/home/pi/PCBTester/raspi
+Restart=always
+RestartSec=2
+User=root
+
+[Install]
+WantedBy=multi-user.target

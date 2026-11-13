@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dokumentasi Locker Cell Tester</title>
+<style>
+  :root {
+    --ink: #0f172a; --muted: #475569; --line: #e2e8f0; --bg: #ffffff; --soft: #f8fafc;
+    --accent: #0e7490; --accent-soft: #ecfeff; --blue: #2563eb;
+    --red: #be123c; --red-soft: #fff1f2; --amber: #b45309; --amber-soft: #fffbeb; --green: #047857; --green-soft: #ecfdf5;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 "Segoe UI", Roboto, "DejaVu Sans", Arial, sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 64px; }
+  header.cover { border-bottom: 3px solid var(--accent); padding-bottom: 18px; margin-bottom: 26px; }
+  header.cover .kicker { color: var(--accent); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
+  header.cover h1 { margin: 6px 0 6px; font-size: 30px; line-height: 1.2; }
+  header.cover p { margin: 0; color: var(--muted); }
+  h2 { margin: 42px 0 12px; padding-top: 8px; font-size: 22px; border-top: 1px solid var(--line); }
+  h3 { margin: 26px 0 8px; font-size: 17px; }
+  h4 { margin: 18px 0 6px; font-size: 15px; }
+  p, li { color: #1e293b; }
+  a { color: var(--blue); }
+  code, pre, kbd { font-family: Consolas, "DejaVu Sans Mono", ui-monospace, monospace; font-size: 13px; }
+  code { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; }
+  pre { background: #0f172a; color: #e2e8f0; padding: 12px 14px; border-radius: 8px; overflow-x: auto; line-height: 1.45; }
+  pre code { background: none; padding: 0; color: inherit; }
+  kbd { border: 1px solid #cbd5e1; border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: #fff; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 14px; }
+  th, td { border: 1px solid var(--line); padding: 6px 9px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); font-weight: 700; }
+  td.c, th.c { text-align: center; }
+  .toc { background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 12px 18px; columns: 2; column-gap: 30px; }
+  .toc ol { margin: 0; padding-left: 18px; }
+  .toc li { break-inside: avoid; }
+  figure { margin: 16px 0 22px; }
+  figure .frame { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: #fff; }
+  figure svg, figure img { width: 100%; height: auto; display: block; }
+  figcaption { margin-top: 6px; font-size: 13px; color: var(--muted); text-align: center; }
+  .callout { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+  .callout.warn { border-color: var(--amber); background: var(--amber-soft); }
+  .callout.bad { border-color: var(--red); background: var(--red-soft); }
+  .callout.ok { border-color: var(--green); background: var(--green-soft); }
+  .callout p { margin: 4px 0; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: .06em; white-space: nowrap; }
+  .tag.k { background: var(--red); color: #fff; }
+  .tag.p { background: #f59e0b; color: #1f1300; }
+  .tag.i { background: #e2e8f0; color: #334155; }
+  .tag.ok { background: var(--green); color: #fff; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .small { font-size: 13px; color: var(--muted); }
+  @media (max-width: 760px) { .toc { columns: 1; } .grid2 { grid-template-columns: 1fr; } }
+  @media print {
+    @page { size: A4; margin: 14mm 12mm; }
+    body { font-size: 11.5pt; }
+    main { max-width: none; padding: 0; }
+    h2 { break-before: page; border-top: none; }
+    h2.keep { break-before: auto; }
+    figure, table, pre, .callout { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header class="cover">
+  <div class="kicker">Dokumentasi Program &middot; Versi 1.0.1 &middot; 23 September 2026</div>
+  <h1>Sistem Test Open Cell / Locker 10 Cell</h1>
+  <p>Raspberry Pi 4B (kontroler utama + UI monitor 15,6") &harr; RS485 &harr; ESP32-S3-DevKitC-1 (kontroler sekunder)</p>
+</header>
+
+<nav class="toc" aria-label="Daftar isi">
+  <ol>
+    <li><a href="#ringkasan">Ringkasan sistem</a></li>
+    <li><a href="#pin">Analisa pin ESP32 &amp; temuan penting</a></li>
+    <li><a href="#wiring">Wiring &amp; kebutuhan hardware</a></li>
+    <li><a href="#cara-kerja">Cara kerja sistem</a></li>
+    <li><a href="#protokol">Protokol komunikasi RS485</a></li>
+    <li><a href="#esp32">Program ESP32 (Arduino IDE)</a></li>
+    <li><a href="#raspi">Program Raspberry Pi</a></li>
+    <li><a href="#ui">Tampilan UI &amp; cara pakai</a></li>
+    <li><a href="#instalasi">Instalasi &amp; menjalankan</a></li>
+    <li><a href="#prosedur">Prosedur test fungsi</a></li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
+    <li><a href="#qc">Hasil QC program</a></li>
+    <li><a href="#riwayat">Riwayat perubahan</a></li>
+  </ol>
+</nav>
+
+<!-- ===================================================================== -->
+<h2 id="ringkasan" class="keep">1. Ringkasan sistem</h2>
+<p>Sistem ini dipakai untuk <b>menguji fungsi buka cell (locker)</b> sebanyak 10 cell. Operator memilih cell di layar monitor,
+Raspberry Pi mengirim perintah lewat RS485, lalu ESP32 mengaktifkan solenoid lock cell tersebut selama <b>1 detik</b> sehingga pintu terbuka.
+Sensor pintu (kontak NO) mendeteksi pintu terbuka dan ESP32 menyalakan LED cell itu sampai pintunya ditutup kembali.
+Seluruh status (pintu, LED, solenoid) tampil <i>real-time</i> di UI, lengkap dengan hasil test per cell.</p>
+
+<table>
+  <tr><th>Komponen</th><th>Peran</th><th>Program</th></tr>
+  <tr><td>Raspberry Pi 4B + monitor 15,6"</td><td>Kontroler utama: UI layar penuh, pengirim perintah, pencatat log &amp; hasil test</td><td><code>raspi/app.py</code> (Python 3, tanpa library tambahan selain <code>pyserial</code>)</td></tr>
+  <tr><td>ESP32-S3-DevKitC-1</td><td>Kontroler sekunder: menggerakkan 10 solenoid, membaca 10 sensor pintu, menyalakan 10 LED</td><td><code>esp32/LockerController/LockerController.ino</code> (Arduino IDE)</td></tr>
+  <tr><td>2&times; modul RS485 (3,3 V)</td><td>Jalur komunikasi Raspberry Pi &harr; ESP32 (half-duplex, master&ndash;slave)</td><td>&ndash;</td></tr>
+</table>
+
+<h4>Fitur utama</h4>
+<ul>
+  <li>Buka cell satu per satu, atau <b>Buka Semua</b> secara berurutan (maks. 1 solenoid aktif bersamaan agar catu daya aman).</li>
+  <li>Status per cell: pintu <b>TERBUKA/TERTUTUP</b>, <b>LED ON/OFF</b>, <b>Solenoid AKTIF/OFF/ANTRE</b>, jumlah dibuka, progres pulse 1 detik.</li>
+  <li><b>Pelacak test otomatis</b> per cell: Perintah &rarr; Solenoid &rarr; Pintu terbuka &rarr; LED ON &rarr; Pintu tertutup &rarr; LED OFF = <b>LULUS</b>; jika ada langkah yang tidak terjadi = <b>GAGAL</b> beserta penyebabnya.</li>
+  <li>Peringatan otomatis: pintu terbuka tanpa perintah, ESP32 restart (mis. brownout saat solenoid aktif), komunikasi terputus, port error.</li>
+  <li>Tombol <b>STOP</b> darurat: semua solenoid OFF dan antrean dikosongkan.</li>
+  <li>Setelah Raspberry Pi atau program restart, semua cell <b>standby</b>: tidak ada perintah buka atau test yang berjalan sendiri.</li>
+  <li><b>RTC DS3231</b> di Raspberry Pi: jam tetap benar setelah listrik mati walaupun tanpa internet.</li>
+  <li>LED dikendalikan langsung oleh ESP32 dari status pintu, jadi tetap bekerja walaupun Raspberry Pi mati.</li>
+  <li>Protokol RS485 dengan CRC-8, retry, deteksi echo &amp; noise. Mode <b>simulasi</b> untuk latihan tanpa hardware.</li>
+  <li>Firmware menolak compile bila setting Arduino IDE atau peta pin salah (lihat bagian 2 &amp; 6).</li>
+</ul>
+
+<figure>
+  <div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 470" role="img" aria-label="Diagram blok sistem" style="font-family:Segoe UI, Roboto, 'DejaVu Sans', Arial, sans-serif"><defs><marker id="a_475569" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker><marker id="a_475569s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker><marker id="a_7c3aed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker><marker id="a_7c3aeds" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker></defs><rect x="10.0" y="370.0" width="190" height="50" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/><text x="105" y="391.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="700" style="">RTC DS3231</text><text x="105" y="406.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">I2C 0x68 · baterai CR2032</text><rect x="10.0" y="26.0" width="190" height="58" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/><text x="105" y="51.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="700" style="">Monitor 15,6&quot;</text><text x="105" y="67.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">UI layar penuh (kiosk)</text><rect x="10.0" y="190.0" width="190" height="120" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="105" y="222.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="700" style="">Raspberry Pi 4B</text><text x="105" y="238.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">kontroler utama</text><text x="105" y="254.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style=""></text><text x="105" y="270.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">app.py</text><text x="105" y="286.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">web UI + master RS485</text><polygon points="247.0,190.0 375.0,190.0 363.0,310.0 235.0,310.0" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="305" y="224.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="700" style="">Modul RS485 #1</text><text x="305" y="239.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">VCC 3,3 V</text><text x="305" y="254.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style=""></text><text x="305" y="269.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">DI ← GPIO14 (TX)</text><text x="305" y="284.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">RO → GPIO15 (RX)</text><polygon points="432.0,190.0 560.0,190.0 548.0,310.0 420.0,310.0" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="490" y="224.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="700" style="">Modul RS485 #2</text><text x="490" y="239.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">VCC 3,3 V</text><text x="490" y="254.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style=""></text><text x="490" y="269.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">DI ← GPIO17 (TX)</text><text x="490" y="284.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">RO → GPIO18 (RX)</text><rect x="595.0" y="115.0" width="170" height="270" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="680" y="198.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="700" style="">ESP32-S3</text><text x="680" y="214.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="700" style="">DevKitC-1</text><text x="680" y="230.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style=""></text><text x="680" y="246.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">kontroler</text><text x="680" y="262.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">sekunder</text><text x="680" y="278.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style=""></text><text x="680" y="294.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Locker-</text><text x="680" y="310.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Controller.ino</text><rect x="810.0" y="118.0" width="180" height="64" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/><text x="900" y="146.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="700" style="">Solenoid Lock ×10</text><text x="900" y="161.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">aktif 1 detik / perintah</text><rect x="810.0" y="218.0" width="180" height="64" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/><text x="900" y="246.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="700" style="">Indikator Pintu ×10</text><text x="900" y="261.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">kontak NO</text><rect x="810.0" y="318.0" width="180" height="64" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/><text x="900" y="346.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="700" style="">LED ×10</text><text x="900" y="361.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">nyala = pintu terbuka</text><polyline points="105,190.0 105,84.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><text x="113" y="160" font-size="12" text-anchor="start" fill="#475569" font-weight="600" style="">HDMI</text><polyline points="105,370.0 105,310.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)" marker-start="url(#a_475569s)"/><text x="113" y="345" font-size="12" text-anchor="start" fill="#475569" font-weight="600" style="">I2C</text><polyline points="200.0,250 235.0,250" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)" marker-start="url(#a_475569s)"/><text x="203" y="240" font-size="12" text-anchor="start" fill="#475569" font-weight="600" style="">UART</text><polyline points="375.0,250 420.0,250" fill="none" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#a_7c3aed)" marker-start="url(#a_7c3aeds)"/><text x="381" y="240" font-size="12" text-anchor="start" fill="#7c3aed" font-weight="600" style="">A · B</text><polyline points="560.0,250 595.0,250" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)" marker-start="url(#a_475569s)"/><text x="562" y="240" font-size="12" text-anchor="start" fill="#475569" font-weight="600" style="">UART</text><polyline points="765,150 810,150" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="810,250 765,250" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="765,350 810,350" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><text x="787" y="140" font-size="11" text-anchor="middle" fill="#475569" font-weight="normal" style="">out</text><text x="787" y="240" font-size="11" text-anchor="middle" fill="#475569" font-weight="normal" style="">in</text><text x="787" y="340" font-size="11" text-anchor="middle" fill="#475569" font-weight="normal" style="">out</text><text x="398" y="330" font-size="11" text-anchor="middle" fill="#7c3aed" font-weight="normal" style="">kabel twisted pair A/B</text><text x="398" y="344" font-size="11" text-anchor="middle" fill="#7c3aed" font-weight="normal" style="">+ GND bersama</text><text x="600" y="455" font-size="12" text-anchor="middle" fill="#475569" font-weight="normal" style="">Logika 3,3 V · GND semua modul dihubungkan · terminasi 120 Ω di kedua ujung kabel A/B bila kabel panjang</text></svg></div>
+  <figcaption>Gambar 1 &mdash; Diagram blok sistem</figcaption>
+</figure>
+
+<h4>Struktur folder</h4>
+<pre><code>LockerCellTester/
+├── README.md
+├── esp32/LockerController/LockerController.ino   ← firmware ESP32 (buka di Arduino IDE)
+├── raspi/                                         ← program Raspberry Pi
+│   ├── app.py              program utama: web server UI + menjalankan master RS485
+│   ├── rs485_master.py     komunikasi RS485, status cell, log, pelacak test
+│   ├── protocol.py         format frame + CRC-8 (identik dengan firmware)
+│   ├── esp32_simulator.py  simulator ESP32 (mode --sim dan pengujian)
+│   ├── config.json         konfigurasi (port, baudrate, timing, …)
+│   ├── web/                UI: index.html, style.css, app.js
+│   ├── install.sh          installer (UART, service, autostart kiosk)
+│   ├── setup_rtc.sh        setup &amp; cek RTC DS3231
+│   ├── kiosk.sh / start.sh menampilkan UI layar penuh / menjalankan manual
+│   └── tests/              pengujian otomatis (27 test)
+└── docs/                   dokumentasi ini (+ PDF, screenshot)</code></pre>
+
+<!-- ===================================================================== -->
+<h2 id="pin">2. Analisa pin ESP32 &amp; temuan penting</h2>
+<p>Peta pin di bawah mengikuti dokumen <i>"Pin PCB Cell raspi-esp32"</i>, setelah dikoreksi. Semua pin ini didefinisikan di bagian
+<b>PETA PIN</b> pada firmware.</p>
+
+<table>
+  <tr><th class="c">Cell</th><th class="c">Solenoid Lock (output)</th><th class="c">Indikator Pintu (input)</th><th class="c">LED (output)</th></tr>
+  <tr><td class="c">1</td><td class="c">GPIO1</td><td class="c"><b>GPIO45</b> <span class="tag k">KOREKSI</span></td><td class="c">GPIO4</td></tr>
+  <tr><td class="c">2</td><td class="c">GPIO2</td><td class="c">GPIO48</td><td class="c">GPIO5</td></tr>
+  <tr><td class="c">3</td><td class="c">GPIO42</td><td class="c">GPIO47</td><td class="c">GPIO6</td></tr>
+  <tr><td class="c">4</td><td class="c">GPIO41</td><td class="c">GPIO21</td><td class="c">GPIO7</td></tr>
+  <tr><td class="c">5</td><td class="c">GPIO40</td><td class="c">GPIO20 (USB D+)</td><td class="c">GPIO15</td></tr>
+  <tr><td class="c">6</td><td class="c">GPIO39</td><td class="c">GPIO19 (USB D&minus;)</td><td class="c">GPIO16</td></tr>
+  <tr><td class="c">7</td><td class="c">GPIO38</td><td class="c">GPIO11</td><td class="c">GPIO8</td></tr>
+  <tr><td class="c">8</td><td class="c">GPIO37</td><td class="c">GPIO12</td><td class="c">GPIO3</td></tr>
+  <tr><td class="c">9</td><td class="c">GPIO36</td><td class="c">GPIO13</td><td class="c">GPIO46</td></tr>
+  <tr><td class="c">10</td><td class="c">GPIO35</td><td class="c">GPIO14</td><td class="c">GPIO9</td></tr>
+  <tr><td colspan="4">RS485: <b>TX = GPIO17</b>, <b>RX = GPIO18</b> (UART1). Tidak dipakai: GPIO0 (tombol BOOT), GPIO10. Serial Monitor: GPIO43/44 (UART0, port USB "UART").</td></tr>
+</table>
+
+<h3>Temuan dari pengamatan dokumen pin</h3>
+<table>
+  <tr><th style="width:110px">Tingkat</th><th>Temuan</th><th>Penanganan</th></tr>
+  <tr><td><span class="tag k">KRITIS</span></td>
+      <td><b>GPIO15 dipakai dua kali</b>: sebagai <i>Indikator Pintu 1</i> (header kanan) dan <i>LED 5</i> (header kiri). Satu GPIO tidak bisa sekaligus input dan output.
+      Urutan pin di dokumen sama persis dengan urutan fisik header DevKitC-1; di header <b>kanan</b>, pin setelah GPIO0 adalah <b>GPIO45</b> (GPIO15 ada di header kiri).</td>
+      <td>Indikator Pintu 1 = <b>GPIO45</b>. Firmware memiliki pemeriksaan <code>static_assert</code>: bila ada GPIO ganda, compile langsung gagal dengan pesan <i>"PIN GANDA"</i>.
+      Mohon cek jalur PCB ke pin fisik nomor 15 header kanan (J3).</td></tr>
+  <tr><td><span class="tag k">KRITIS</span></td>
+      <td><b>GPIO19 &amp; GPIO20 adalah USB D&minus;/D+</b> (Indikator Pintu 6 &amp; 5). Secara default terhubung ke USB internal ESP32-S3 (dengan pull-up di D+).</td>
+      <td>Arduino IDE: <b>USB CDC On Boot = Disabled</b> (firmware menolak compile bila Enabled). Upload &amp; Serial Monitor lewat port <b>"UART"/"COM"</b>, bukan port "USB".
+      Firmware v1.0.1 mematikan resistor pull PHY USB (termasuk pull-up D+ &plusmn;1,5&nbsp;k&Omega;) lalu melepas pad USB. <b>Input pintu tidak boleh memakai <code>INPUT_PULLUP</code></b>:
+      pada GPIO20 hal itu membuat pull-up USB tetap aktif sehingga pintu 5 selalu terbaca HIGH (bug v1.0.0, sudah diperbaiki). Jangan menyambungkan kabel ke port "USB" saat operasi.</td></tr>
+  <tr><td><span class="tag k">KRITIS*</span></td>
+      <td><b>GPIO35, 36, 37</b> (Solenoid 10, 9, 8) dipakai internal oleh <b>PSRAM Octal</b> pada modul <b>N8R8 / N16R8 / N32R8</b>.
+      Pada modul N8, N16, N4R2, N8R2 pin ini bebas. *Kritis hanya untuk modul ber-PSRAM octal.</td>
+      <td>Cek tulisan di tutup logam modul (mis. <code>ESP32-S3-WROOM-1 N16R8</code>). Arduino IDE: <b>PSRAM = Disabled</b> (firmware menolak "OPI PSRAM").
+      Untuk modul R8, Espressif menyatakan pin ini tidak tersedia: uji solenoid 8&ndash;10 dengan teliti; bila tidak stabil, gunakan modul tanpa PSRAM octal atau ubah jalur PCB.</td></tr>
+  <tr><td><span class="tag p">PENTING</span></td>
+      <td><b>GPIO45 = pin strapping VDD_SPI</b> (Indikator Pintu 1). Bila pin ini HIGH saat ESP32 dinyalakan, tegangan flash menjadi 1,8 V &rarr; <b>ESP32 gagal boot</b> (modul flash 3,3 V).</td>
+      <td>Rangkaian PCB ternyata <b>aktif-HIGH</b> (pintu tertutup = HIGH). Artinya bila <b>pintu 1 tertutup saat ESP32 dinyalakan</b>, GPIO45 bernilai HIGH dan ESP32 berisiko gagal boot.
+      <b>Uji wajib:</b> tutup pintu 1, cabut-pasang catu ESP32, pastikan UI kembali <i>ESP32 ONLINE</i>. Bila gagal boot: burn eFuse <code>espefuse.py set_flash_voltage 3.3V</code>
+      (permanen, tidak bisa dibatalkan) atau pindahkan sensor pintu 1 ke GPIO lain (mis. GPIO10).</td></tr>
+  <tr><td><span class="tag p">PENTING</span></td>
+      <td><b>GPIO46 = pin strapping</b> (LED 9). Saat masuk mode download (GPIO0 LOW), GPIO46 harus LOW.</td>
+      <td>Rangkaian LED 9 tidak boleh menarik pin ke HIGH saat boot (gunakan LED aktif-HIGH ke GND via resistor, atau driver transistor dengan pull-down).</td></tr>
+  <tr><td><span class="tag i">INFO</span></td>
+      <td><b>GPIO3</b> (LED 8) adalah strapping JTAG; tidak berpengaruh pada setting eFuse default. <b>GPIO39&ndash;42</b> (Solenoid 3&ndash;6) adalah pin JTAG, bebas dipakai karena JTAG lewat USB.</td>
+      <td>Tidak perlu tindakan.</td></tr>
+  <tr><td><span class="tag i">INFO</span></td>
+      <td>LED RGB bawaan board (WS2812) terhubung ke <b>GPIO48</b> (DevKitC-1 v1.0) atau <b>GPIO38</b> (v1.1).</td>
+      <td>GPIO48 dipakai sebagai input pintu 2: aman. Pada board v1.1, LED RGB bawaan bisa berkedip saat solenoid 7 (GPIO38) aktif: tidak berbahaya.</td></tr>
+  <tr><td><span class="tag i">INFO</span></td>
+      <td>Semua GPIO ESP32-S3 dan Raspberry Pi bekerja pada <b>3,3 V dan tidak toleran 5 V</b>. GPIO tidak mampu menggerakkan solenoid secara langsung.</td>
+      <td>Modul RS485 harus diberi VCC 3,3 V (atau memakai level shifter). Solenoid lewat driver MOSFET + dioda flyback (bagian 3).</td></tr>
+</table>
+
+<!-- ===================================================================== -->
+<h2 id="wiring">3. Wiring &amp; kebutuhan hardware</h2>
+<div class="grid2">
+<div>
+<h4>Raspberry Pi 4B &harr; Modul RS485 #1</h4>
+<table>
+  <tr><th>Raspberry Pi</th><th>Modul RS485</th></tr>
+  <tr><td>Pin fisik 8 &mdash; GPIO14 (TXD)</td><td>DI / TXD</td></tr>
+  <tr><td>Pin fisik 10 &mdash; GPIO15 (RXD)</td><td>RO / RXD</td></tr>
+  <tr><td>Pin fisik 1 &mdash; 3V3</td><td>VCC</td></tr>
+  <tr><td>Pin fisik 6 &mdash; GND</td><td>GND</td></tr>
+</table>
+</div>
+<div>
+<h4>ESP32-S3 &harr; Modul RS485 #2</h4>
+<table>
+  <tr><th>ESP32-S3-DevKitC-1</th><th>Modul RS485</th></tr>
+  <tr><td>GPIO17 (TX UART1)</td><td>DI / TXD</td></tr>
+  <tr><td>GPIO18 (RX UART1)</td><td>RO / RXD</td></tr>
+  <tr><td>3V3</td><td>VCC</td></tr>
+  <tr><td>GND</td><td>GND</td></tr>
+</table>
+</div>
+</div>
+<h4>Raspberry Pi 4B &harr; RTC DS3231 (DS3231SN)</h4>
+<table>
+  <tr><th>Raspberry Pi</th><th>Modul RTC</th><th>Keterangan</th></tr>
+  <tr><td>Pin fisik 1 &mdash; 3V3</td><td>VCC</td><td rowspan="4">I2C bus 1, alamat <b>0x68</b>. Pasang baterai CR2032 agar waktu tersimpan saat listrik mati.</td></tr>
+  <tr><td>Pin fisik 3 &mdash; GPIO2 (SDA)</td><td>SDA</td></tr>
+  <tr><td>Pin fisik 5 &mdash; GPIO3 (SCL)</td><td>SCL</td></tr>
+  <tr><td>Pin fisik 9 &mdash; GND</td><td>GND</td></tr>
+</table>
+<ul>
+  <li><b>Antar modul:</b> A&ndash;A, B&ndash;B, dan GND&ndash;GND dengan kabel twisted pair. Untuk kabel panjang pasang terminasi 120&nbsp;&Omega; di kedua ujung (banyak modul sudah memiliki resistor ini).</li>
+  <li><b>Modul RS485</b> yang disarankan: tipe <b>auto-direction</b> (hanya TX/RX, sesuai PCB) yang bekerja pada 3,3 V, mis. berbasis MAX3485/SP3485. Bila memakai MAX485 dengan pin DE/RE, isi <code>RS485_DE_PIN</code> di firmware (mis. GPIO10) dan gunakan modul auto-direction di sisi Raspberry Pi.</li>
+  <li><b>Label TX/RX modul berbeda-beda.</b> Bila tidak ada komunikasi sama sekali, tukar kabel TX/RX di sisi modul terlebih dahulu.</li>
+  <li><b>Indikator pintu (sesuai hasil uji PCB):</b> input <b>aktif-HIGH</b>. Pintu tertutup &rarr; kontak NO terhubung &rarr; GPIO <b>HIGH</b>; pintu terbuka / sensor belum dipasang &rarr; GPIO <b>LOW</b> (PCB menarik ke LOW, firmware menambah pull-down internal).
+  Konsekuensinya: <b>cell yang sensornya belum terpasang akan tampil TERBUKA dan LED-nya menyala</b>. Ini sesuai spesifikasi (tidak ada input = pintu terbuka). Bila suatu saat terbalik, ubah <code>DOOR_CLOSED_LEVEL</code> di firmware (perhatikan catatan GPIO45).</li>
+  <li><b>Solenoid:</b> GPIO &rarr; resistor 100&nbsp;&Omega; &rarr; gate MOSFET N logic-level (mis. AO3400/IRLZ44N), resistor pull-down 10&nbsp;k&Omega; gate&ndash;GND, <b>dioda flyback</b> (1N4007/SS14) paralel terbalik pada solenoid. Catu 12 V terpisah dengan GND bersama.</li>
+  <li><b>LED:</b> GPIO &rarr; resistor 220&ndash;330&nbsp;&Omega; &rarr; LED &rarr; GND (arus &le; 10&nbsp;mA), atau lewat transistor untuk LED 12 V.</li>
+</ul>
+
+<!-- ===================================================================== -->
+<h2 id="cara-kerja">4. Cara kerja sistem</h2>
+<ol>
+  <li>Operator menekan tombol <b>BUKA</b> pada cell ke-<i>n</i> di layar.</li>
+  <li>UI mengirim permintaan ke program Raspberry Pi (<code>POST /api/open</code>). Program memasukkan perintah ke antrean.</li>
+  <li>Thread master RS485 mengirim frame <code>&gt;01,OPEN,n*CC</code> ke ESP32 (alamat 01) dan menunggu ACK (retry maks. 3&times;).</li>
+  <li>ESP32 memvalidasi CRC &amp; alamat, lalu mengaktifkan GPIO solenoid cell <i>n</i>. Timer <code>millis()</code> mematikan solenoid tepat setelah <b>1000 ms</b>. Bila ada solenoid lain yang masih aktif, perintah masuk antrean dan dijalankan setelahnya.</li>
+  <li>Kunci terlepas dan pintu terbuka. Kontak NO pada indikator pintu lepas sehingga <b>input menjadi tidak aktif</b>. Setelah stabil 50 ms (debounce), ESP32 menandai pintu <i>n</i> TERBUKA dan <b>menyalakan LED <i>n</i></b>.</li>
+  <li>Setiap 150 ms Raspberry Pi meminta status (<code>STAT</code>). ESP32 membalas status pintu, LED, solenoid, dan antrean seluruh cell. UI menampilkan perubahan dalam &plusmn;0,25 detik.</li>
+  <li>Saat pintu ditutup kembali, kontak NO terhubung, <b>input aktif</b>, ESP32 <b>mematikan LED <i>n</i></b>. UI menandai test cell <i>n</i> <b>LULUS</b>.</li>
+</ol>
+
+<figure>
+  <div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" role="img" aria-label="Sequence diagram membuka cell n" style="font-family:Segoe UI, Roboto, 'DejaVu Sans', Arial, sans-serif"><defs><marker id="a_0e7490" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e7490"/></marker><marker id="a_0e7490s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e7490"/></marker><marker id="a_334155" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#334155"/></marker><marker id="a_334155s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#334155"/></marker><marker id="a_94a3b8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker><marker id="a_94a3b8s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker></defs><polyline points="70,52 70,688" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="6 4"/><rect x="-5.0" y="12.0" width="150" height="36" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="70" y="34.2" font-size="12" text-anchor="middle" fill="#ffffff" font-weight="normal" style="">Operator</text><polyline points="245,52 245,688" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="6 4"/><rect x="170.0" y="12.0" width="150" height="36" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="245" y="34.2" font-size="12" text-anchor="middle" fill="#ffffff" font-weight="normal" style="">Raspberry Pi (UI)</text><polyline points="450,52 450,688" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="6 4"/><rect x="375.0" y="12.0" width="150" height="36" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="450" y="34.2" font-size="12" text-anchor="middle" fill="#ffffff" font-weight="normal" style="">ESP32-S3</text><polyline points="640,52 640,688" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="6 4"/><rect x="565.0" y="12.0" width="150" height="36" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="640" y="34.2" font-size="12" text-anchor="middle" fill="#ffffff" font-weight="normal" style="">Solenoid n</text><polyline points="800,52 800,688" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="6 4"/><rect x="725.0" y="12.0" width="150" height="36" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="800" y="34.2" font-size="12" text-anchor="middle" fill="#ffffff" font-weight="normal" style="">Pintu / Sensor n</text><polyline points="935,52 935,688" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="6 4"/><rect x="880.0" y="12.0" width="110" height="36" rx="8" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="935" y="34.2" font-size="12" text-anchor="middle" fill="#ffffff" font-weight="normal" style="">LED n</text><rect x="634" y="160" width="12" height="170" rx="3" fill="#22d3ee" opacity=".55"/><text x="652" y="198" font-size="11" text-anchor="start" fill="#0e7490" font-weight="700" style="">ON 1 s</text><rect x="929" y="296" width="12" height="238" rx="3" fill="#fbbf24" opacity=".7"/><text x="923" y="415.0" font-size="11" text-anchor="end" fill="#b45309" font-weight="700" style="">LED ON selama</text><text x="923" y="429.0" font-size="11" text-anchor="end" fill="#b45309" font-weight="700" style="">pintu terbuka</text><polyline points="77,92 238,92" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="157.5" y="86" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">klik BUKA cell n</text><polyline points="252,126 443,126" fill="none" stroke="#0e7490" stroke-width="1.6" marker-end="url(#a_0e7490)"/><text x="347.5" y="120" font-size="12" text-anchor="middle" fill="#0e7490" font-weight="600" style="">&gt;01,OPEN,n*CC</text><polyline points="457,160 633,160" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="545.0" y="154" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">GPIO solenoid = ON</text><polyline points="443,194 252,194" fill="none" stroke="#0e7490" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_0e7490)"/><text x="347.5" y="188" font-size="12" text-anchor="middle" fill="#0e7490" font-weight="600" style="">&lt;01,ACK,OPEN,n,STARTED*CC</text><polyline points="647,228 793,228" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="720.0" y="222" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">kunci lepas → terbuka</text><polyline points="793,262 457,262" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="625.0" y="256" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">input pintu TIDAK AKTIF (kontak NO lepas)</text><polyline points="457,296 928,296" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="692.5" y="290" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">GPIO LED n = ON</text><polyline points="457,330 633,330" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="545.0" y="324" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">1000 ms: solenoid OFF</text><polyline points="252,364 443,364" fill="none" stroke="#0e7490" stroke-width="1.6" marker-end="url(#a_0e7490)"/><text x="347.5" y="358" font-size="12" text-anchor="middle" fill="#0e7490" font-weight="600" style="">&gt;01,STAT*CC  (tiap 150 ms)</text><polyline points="443,398 252,398" fill="none" stroke="#0e7490" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_0e7490)"/><text x="347.5" y="392" font-size="12" text-anchor="middle" fill="#0e7490" font-weight="600" style="">&lt;01,STAT,..O..,..1..,..*CC</text><polyline points="238,432 77,432" fill="none" stroke="#334155" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_334155)"/><text x="157.5" y="426" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">TERBUKA · LED ON</text><polyline points="77,466 793,466" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="435.0" y="460" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">operator menutup pintu</text><polyline points="793,500 457,500" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="625.0" y="494" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">input pintu AKTIF (kontak NO terhubung)</text><polyline points="457,534 928,534" fill="none" stroke="#334155" stroke-width="1.6" marker-end="url(#a_334155)"/><text x="692.5" y="528" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">GPIO LED n = OFF</text><polyline points="252,568 443,568" fill="none" stroke="#0e7490" stroke-width="1.6" marker-end="url(#a_0e7490)"/><text x="347.5" y="562" font-size="12" text-anchor="middle" fill="#0e7490" font-weight="600" style="">&gt;01,STAT*CC</text><polyline points="443,602 252,602" fill="none" stroke="#0e7490" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_0e7490)"/><text x="347.5" y="596" font-size="12" text-anchor="middle" fill="#0e7490" font-weight="600" style="">&lt;01,STAT,..C..,..0..,..*CC</text><polyline points="238,636 77,636" fill="none" stroke="#334155" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_334155)"/><text x="157.5" y="630" font-size="12" text-anchor="middle" fill="#334155" font-weight="600" style="">TERTUTUP · TEST LULUS</text></svg></div>
+  <figcaption>Gambar 2 &mdash; Sequence diagram membuka cell ke-n</figcaption>
+</figure>
+
+<table>
+  <tr><th>Parameter waktu</th><th>Nilai</th><th>Diatur di</th></tr>
+  <tr><td>Lama solenoid aktif per perintah</td><td>1000 ms</td><td>Firmware <code>SOLENOID_PULSE_MS</code></td></tr>
+  <tr><td>Solenoid aktif bersamaan (sisanya antre)</td><td>1</td><td>Firmware <code>MAX_ACTIVE_SOLENOIDS</code></td></tr>
+  <tr><td>Debounce indikator pintu</td><td>50 ms</td><td>Firmware <code>DOOR_DEBOUNCE_MS</code></td></tr>
+  <tr><td>Polling status oleh Raspberry Pi</td><td>150 ms</td><td><code>config.json</code> <code>poll_interval_ms</code></td></tr>
+  <tr><td>Batas waktu balasan ESP32</td><td>200 ms</td><td><code>config.json</code> <code>response_timeout_ms</code></td></tr>
+  <tr><td>Refresh tampilan UI</td><td>250 ms</td><td><code>web/app.js</code> <code>POLL_MS</code></td></tr>
+  <tr><td>Status OFFLINE setelah gagal berturut-turut</td><td>3 kali</td><td><code>config.json</code> <code>offline_after_failures</code></td></tr>
+</table>
+
+<!-- ===================================================================== -->
+<h2 id="protokol">5. Protokol komunikasi RS485</h2>
+<p>Komunikasi <b>ASCII 8N1, 38400 bps</b>, pola <b>master&ndash;slave</b>: Raspberry Pi selalu bertanya, ESP32 hanya menjawab (tidak pernah mengirim duluan) sehingga tidak terjadi tabrakan di bus half-duplex.</p>
+<pre><code>Master → ESP32 :  &gt;AA,PERINTAH[,ARGUMEN]*CC\n
+ESP32 → Master :  &lt;AA,BALASAN,...*CC\n
+
+AA = alamat node 2 digit (01)
+CC = CRC-8 (poly 0x07, init 0x00) dari teks di antara '&gt;'/'&lt;' dan '*', ditulis 2 digit HEX
+     nilai cek: CRC-8("123456789") = F4  (dipakai sebagai self-test saat ESP32 boot)</code></pre>
+
+<table>
+  <tr><th>Perintah</th><th>Contoh request</th><th>Contoh balasan</th><th>Keterangan</th></tr>
+  <tr><td>PING</td><td><code>&gt;01,PING*13</code></td><td><code>&lt;01,PONG,1.0.0,10,POWERON*A1</code></td><td>Versi firmware, jumlah cell, alasan reset terakhir (POWERON / BROWNOUT / WDT / PANIC / SW / EXT)</td></tr>
+  <tr><td>STAT</td><td><code>&gt;01,STAT*A0</code></td><td><code>&lt;01,STAT,CCOCCCCCCC,0010000000,0000000000,0000000000,125*1E</code></td><td>Field: pintu (C=tertutup, O=terbuka), LED, solenoid, antrean (1/0), uptime detik. Karakter pertama = cell 1.</td></tr>
+  <tr><td>OPEN,n</td><td><code>&gt;01,OPEN,3*54</code></td><td><code>&lt;01,ACK,OPEN,3,STARTED*E1</code><br><code>&lt;01,ACK,OPEN,6,QUEUED*D9</code></td><td>STARTED = langsung aktif, QUEUED = masuk antrean, ALREADY_ON / ALREADY_QUEUED = sudah diproses</td></tr>
+  <tr><td>OPEN (salah)</td><td><code>&gt;01,OPEN,11*16</code></td><td><code>&lt;01,NAK,OPEN,BADARG*91</code></td><td>Nomor cell di luar 1&ndash;10</td></tr>
+  <tr><td>STOP</td><td><code>&gt;01,STOP*6A</code></td><td><code>&lt;01,ACK,STOP*D2</code></td><td>Semua solenoid OFF dan antrean dikosongkan</td></tr>
+</table>
+<ul>
+  <li>Frame dengan CRC salah atau alamat lain <b>diabaikan</b> ESP32 (tidak dibalas); Raspberry Pi menghitungnya sebagai timeout lalu mengulang (OPEN/STOP) atau menunggu polling berikutnya (STAT).</li>
+  <li>Echo frame sendiri (sebagian modul RS485 memantulkan data yang dikirim) dan byte sampah otomatis diabaikan oleh kedua sisi.</li>
+  <li>Kolom <code>alamat</code> memungkinkan penambahan ESP32 lain di bus yang sama di kemudian hari (alamat 02, 03, …).</li>
+</ul>
+
+<!-- ===================================================================== -->
+<h2 id="esp32">6. Program ESP32 (Arduino IDE)</h2>
+<p>File: <code>esp32/LockerController/LockerController.ino</code>. Satu file, tanpa library tambahan. Seluruh proses <b>non-blocking</b> (tanpa <code>delay()</code> panjang): loop berjalan ribuan kali per detik sehingga pembacaan pintu dan timer solenoid selalu tepat.</p>
+
+<h3>Setting Arduino IDE (menu Tools)</h3>
+<table>
+  <tr><th>Menu</th><th>Nilai</th><th>Alasan</th></tr>
+  <tr><td>Board</td><td><b>ESP32S3 Dev Module</b> (paket <i>esp32 by Espressif</i>, diuji v3.3.12)</td><td>&ndash;</td></tr>
+  <tr><td>USB CDC On Boot</td><td><b>Disabled</b></td><td>GPIO19/20 dipakai indikator pintu 6 &amp; 5 (compile gagal bila Enabled)</td></tr>
+  <tr><td>PSRAM</td><td><b>Disabled</b> (atau QSPI PSRAM untuk modul N8R2)</td><td>OPI PSRAM memakai GPIO35&ndash;37 (compile gagal bila OPI)</td></tr>
+  <tr><td>Flash Mode / Flash Size</td><td>QIO 80MHz / sesuai modul (N8 = 8MB, N16 = 16MB)</td><td>&ndash;</td></tr>
+  <tr><td>Port</td><td>COM dari port USB berlabel <b>UART</b> / <b>COM</b></td><td>Port "USB" (native) tidak dipakai</td></tr>
+  <tr><td>Serial Monitor</td><td>115200 baud, line ending <b>Newline</b></td><td>Log &amp; perintah debug</td></tr>
+</table>
+
+<h3>Parameter konfigurasi (bagian 1 firmware)</h3>
+<table>
+  <tr><th>#define</th><th>Default</th><th>Fungsi</th></tr>
+  <tr><td><code>NODE_ADDRESS</code></td><td>1</td><td>Alamat ESP32 di bus RS485 (harus sama dengan <code>node_address</code> di config.json)</td></tr>
+  <tr><td><code>RS485_BAUD</code></td><td>38400</td><td>Baudrate RS485 (harus sama dengan <code>baudrate</code> di config.json)</td></tr>
+  <tr><td><code>RS485_TX_PIN / RS485_RX_PIN</code></td><td>17 / 18</td><td>Pin UART1 ke modul RS485</td></tr>
+  <tr><td><code>RS485_DE_PIN</code></td><td>-1</td><td>-1 = modul auto-direction. Isi GPIO bila modul memerlukan DE/RE</td></tr>
+  <tr><td><code>RS485_TURNAROUND_US</code></td><td>1500</td><td>Jeda sebelum membalas (transceiver master sempat pindah ke mode terima)</td></tr>
+  <tr><td><code>SOLENOID_PULSE_MS</code></td><td>1000</td><td>Lama solenoid aktif</td></tr>
+  <tr><td><code>MAX_ACTIVE_SOLENOIDS</code></td><td>1</td><td>Solenoid aktif bersamaan; sisanya antre (FIFO)</td></tr>
+  <tr><td><code>DOOR_DEBOUNCE_MS</code></td><td>50</td><td>Debounce sensor pintu</td></tr>
+  <tr><td><code>SOLENOID_ON_LEVEL / LED_ON_LEVEL</code></td><td>HIGH / HIGH</td><td>Level GPIO untuk mengaktifkan driver solenoid / LED</td></tr>
+  <tr><td><code>DOOR_CLOSED_LEVEL / DOOR_INPUT_MODE</code></td><td>HIGH / INPUT_PULLDOWN</td><td>Level GPIO saat pintu tertutup (input aktif-HIGH sesuai PCB). Jangan memakai INPUT_PULLUP (lihat temuan GPIO19/20)</td></tr>
+</table>
+
+<h3>Fungsi utama</h3>
+<table>
+  <tr><th>Fungsi</th><th>Tugas</th></tr>
+  <tr><td><code>setup()</code></td><td>Output OFF lebih dulu, lepas GPIO19/20 dari USB, set input pintu, buka Serial &amp; RS485, baca status awal pintu &rarr; LED, self-test CRC, aktifkan watchdog</td></tr>
+  <tr><td><code>pollRs485()</code></td><td>Mengumpulkan byte menjadi frame (sinkron ulang di karakter '&gt;', buang frame terpotong &gt; 50 ms)</td></tr>
+  <tr><td><code>handleRs485Frame()</code></td><td>Cek format, CRC-8, alamat; eksekusi STAT / OPEN / STOP / PING; kirim balasan</td></tr>
+  <tr><td><code>requestOpen()</code></td><td>Aktifkan solenoid bila slot tersedia, atau masukkan ke antrean</td></tr>
+  <tr><td><code>updateSolenoids()</code></td><td>Matikan solenoid yang sudah aktif &ge; 1000 ms dan jalankan antrean berikutnya</td></tr>
+  <tr><td><code>updateDoors()</code></td><td>Debounce indikator pintu; saat status berubah, LED mengikuti (terbuka = ON, tertutup = OFF)</td></tr>
+  <tr><td><code>stopAll()</code></td><td>Semua solenoid OFF, antrean dikosongkan</td></tr>
+  <tr><td><code>handleDebugCommand()</code></td><td>Perintah teks dari Serial Monitor untuk test tanpa Raspberry Pi</td></tr>
+</table>
+
+<figure>
+  <div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 850" role="img" aria-label="Flowchart firmware ESP32" style="font-family:Segoe UI, Roboto, 'DejaVu Sans', Arial, sans-serif"><defs><marker id="a_059669" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker><marker id="a_059669s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker><marker id="a_475569" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker><marker id="a_475569s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker><marker id="a_94a3b8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker><marker id="a_94a3b8s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker><marker id="a_e11d48" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/></marker><marker id="a_e11d48s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/></marker></defs><text x="220" y="22" font-size="13" text-anchor="middle" fill="#2563eb" font-weight="700" style="">SETUP (sekali saat boot)</text><text x="640" y="22" font-size="13" text-anchor="middle" fill="#2563eb" font-weight="700" style="">LOOP (berulang terus, non-blocking)</text><rect x="90.0" y="40.0" width="260" height="40" rx="20.0" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="220" y="64.55" font-size="13" text-anchor="middle" fill="#ffffff" font-weight="700" style="">MULAI (power on / reset)</text><rect x="70.0" y="110.0" width="300" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="220" y="131.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">10 Solenoid &amp; 10 LED = OUTPUT</text><text x="220" y="147.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">semua langsung OFF</text><rect x="70.0" y="190.0" width="300" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="220" y="211.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Lepas GPIO19/20 dari PHY USB</text><text x="220" y="227.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">10 input pintu: INPUT_PULLUP</text><rect x="70.0" y="270.0" width="300" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="220" y="291.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Serial debug 115200 bps (port UART)</text><text x="220" y="307.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">RS485 UART1 38400 bps: RX18 TX17</text><rect x="70.0" y="350.0" width="300" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="220" y="371.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Baca status awal tiap pintu</text><text x="220" y="387.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">LED n = ON bila pintu n terbuka</text><rect x="70.0" y="430.0" width="300" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="220" y="451.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Self-test CRC-8, cetak peta pin</text><text x="220" y="467.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">aktifkan watchdog loop (5 s)</text><polyline points="220,80.0 220,110.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="220,160.0 220,190.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="220,240.0 220,270.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="220,320.0 220,350.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="220,400.0 220,430.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><rect x="560.0" y="40.0" width="160" height="40" rx="20.0" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="640" y="64.55" font-size="13" text-anchor="middle" fill="#ffffff" font-weight="700" style="">LOOP</text><polyline points="220,480.0 220,505 430,505 430,60 560.0,60" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><rect x="520.0" y="109.0" width="240" height="42" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="640" y="134.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">now = millis()</text><polygon points="640,177.0 760.0,225 640,273.0 520.0,225" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="640" y="221.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Frame RS485 lengkap</text><text x="640" y="237.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">(diakhiri \n) ?</text><polygon points="640,297.0 760.0,345 640,393.0 520.0,345" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="640" y="341.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">CRC-8 valid &amp;</text><text x="640" y="357.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">alamat = 01 ?</text><rect x="800.0" y="320.0" width="170" height="50" rx="8" fill="#fff1f2" stroke="#e11d48" stroke-width="1.6"/><text x="885" y="341.55" font-size="13" text-anchor="middle" fill="#881337" font-weight="normal" style="">Abaikan frame</text><text x="885" y="357.55" font-size="13" text-anchor="middle" fill="#881337" font-weight="normal" style="">(hitung error)</text><rect x="510.0" y="425.0" width="260" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="640" y="446.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Eksekusi perintah:</text><text x="640" y="462.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">STAT · OPEN n · STOP · PING</text><polygon points="512.0,500.0 780.0,500.0 768.0,550.0 500.0,550.0" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="640" y="521.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Jeda 1,5 ms, kirim balasan</text><text x="640" y="537.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">&lt;01,...*CC\n ke Raspberry Pi</text><rect x="500.0" y="584.0" width="280" height="42" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="640" y="609.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Perintah debug dari Serial Monitor</text><rect x="490.0" y="653.0" width="300" height="64" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="640" y="673.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">updateSolenoids(): solenoid ON ≥ 1000 ms</text><text x="640" y="689.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">→ OFF; jika slot kosong, jalankan</text><text x="640" y="705.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">antrean berikutnya (FIFO)</text><rect x="490.0" y="753.0" width="300" height="64" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="640" y="773.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">updateDoors(): debounce 50 ms;</text><text x="640" y="789.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">bila status pintu berubah →</text><text x="640" y="805.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">LED = ON (terbuka) / OFF (tertutup)</text><polyline points="640,80.0 640,109.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="640,151.0 640,177.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="640,273.0 640,297.0" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="646.0" y="279.0" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="640,393.0 640,425.0" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="646.0" y="403.0" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="760.0,345 800.0,345" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="770" y="337" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="640,475.0 640,500.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="640,550.0 640,584.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="640,626.0 640,653.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="640,717.0 640,753.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="520.0,225 470,225 470,605 500.0,605" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="478" y="216" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="885,370.0 885,605 780.0,605" fill="none" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#a_94a3b8)"/><polyline points="790,785 975,785 975,130 760,130" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><text x="968" y="460" font-size="12" text-anchor="end" fill="#475569" font-weight="600" style="">ulangi</text></svg></div>
+  <figcaption>Gambar 3 &mdash; Flowchart firmware ESP32 (setup &amp; loop)</figcaption>
+</figure>
+<figure>
+  <div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" role="img" aria-label="Logika OPEN n dan LED" style="font-family:Segoe UI, Roboto, 'DejaVu Sans', Arial, sans-serif"><defs><marker id="a_059669" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker><marker id="a_059669s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker><marker id="a_475569" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker><marker id="a_475569s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker><marker id="a_e11d48" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/></marker><marker id="a_e11d48s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/></marker></defs><text x="250" y="22" font-size="13" text-anchor="middle" fill="#2563eb" font-weight="700" style="">A. Perintah OPEN n (dari RS485 / debug)</text><text x="760" y="22" font-size="13" text-anchor="middle" fill="#2563eb" font-weight="700" style="">B. Indikator pintu → LED (tiap loop, tiap cell)</text><rect x="130.0" y="39.0" width="240" height="38" rx="19.0" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="250" y="62.55" font-size="13" text-anchor="middle" fill="#ffffff" font-weight="700" style="">OPEN n diterima</text><polygon points="250,100.0 350.0,140 250,180.0 150.0,140" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="250" y="144.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">n di 1..10 ?</text><rect x="400.0" y="120.0" width="130" height="40" rx="8" fill="#fff1f2" stroke="#e11d48" stroke-width="1.6"/><text x="465" y="144.55" font-size="13" text-anchor="middle" fill="#881337" font-weight="normal" style="">NAK BADARG</text><polygon points="250,208.0 360.0,250 250,292.0 140.0,250" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="250" y="246.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Solenoid n</text><text x="250" y="262.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">sedang aktif ?</text><rect x="395.0" y="230.0" width="140" height="40" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="465" y="254.55" font-size="13" text-anchor="middle" fill="#065f46" font-weight="normal" style="">ALREADY_ON</text><polygon points="250,318.0 360.0,360 250,402.0 140.0,360" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="250" y="356.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Cell n sudah</text><text x="250" y="372.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">dalam antrean ?</text><rect x="390.0" y="340.0" width="150" height="40" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="465" y="364.55" font-size="13" text-anchor="middle" fill="#065f46" font-weight="normal" style="">ALREADY_QUEUED</text><polygon points="250,425.0 375.0,475 250,525.0 125.0,475" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="250" y="471.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Antrean kosong &amp;</text><text x="250" y="487.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">solenoid aktif &lt; 1 ?</text><rect x="15.0" y="565.0" width="190" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="110" y="586.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Solenoid n = ON</text><text x="110" y="602.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">catat waktu → STARTED</text><rect x="295.0" y="565.0" width="190" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="390" y="586.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Masukkan n ke antrean</text><text x="390" y="602.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">→ QUEUED</text><polyline points="250,77.0 250,100.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="350.0,140 400.0,140" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="356" y="132" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="250,180.0 250,208.0" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="256.0" y="188.0" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="360.0,250 395.0,250" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="366" y="242" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="250,292.0 250,318.0" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="256.0" y="299.0" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="360.0,360 390.0,360" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="366" y="352" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="250,402.0 250,425.0" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="256.0" y="407.5" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="125.0,475 110,475 110,565.0" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="80" y="467" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="375.0,475 390,475 390,565.0" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="385" y="467" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><rect x="630.0" y="39.0" width="260" height="38" rx="19.0" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="760" y="62.55" font-size="13" text-anchor="middle" fill="#ffffff" font-weight="700" style="">Untuk cell i = 1..10</text><polygon points="642.0,108.0 890.0,108.0 878.0,152.0 630.0,152.0" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="760" y="134.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Baca GPIO indikator pintu i</text><polygon points="760,185.0 905.0,240 760,295.0 615.0,240" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="760" y="236.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Level = DOOR_CLOSED_LEVEL ?</text><text x="760" y="252.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">(kontak NO terhubung)</text><rect x="555.0" y="328.0" width="170" height="44" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="640" y="354.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">raw = TERTUTUP</text><rect x="795.0" y="328.0" width="170" height="44" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="880" y="354.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">raw = TERBUKA</text><polygon points="760,405.0 905.0,460 760,515.0 615.0,460" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="760" y="456.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">raw stabil ≥ 50 ms &amp;</text><text x="760" y="472.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">berbeda dari status ?</text><rect x="610.0" y="553.0" width="300" height="64" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="760" y="573.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">status pintu i = raw</text><text x="760" y="589.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">TERBUKA → LED i ON</text><text x="760" y="605.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">TERTUTUP → LED i OFF</text><rect x="925.0" y="522.0" width="70" height="36" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="960" y="544.55" font-size="13" text-anchor="middle" fill="#065f46" font-weight="normal" style="">selesai</text><polyline points="760,77.0 760,108.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="760,152.0 760,185.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="615.0,240 640,240 640,328.0" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="600" y="232" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="905.0,240 880,240 880,328.0" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="912" y="232" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="640,372.0 640,395 760,395 760,405.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="880,372.0 880,395 760,395 760,405.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="760,515.0 760,553.0" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="766.0" y="528.0" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="905.0,460 960,460 960,522.0" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="912" y="452" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text></svg></div>
+  <figcaption>Gambar 4 &mdash; Logika perintah OPEN n (antrean solenoid) dan indikator pintu &rarr; LED</figcaption>
+</figure>
+
+<h3>Perintah debug di Serial Monitor</h3>
+<table>
+  <tr><th>Ketik</th><th>Fungsi</th></tr>
+  <tr><td><code>open 3</code></td><td>Buka cell 3 (solenoid 1 detik)</td></tr>
+  <tr><td><code>all</code></td><td>Buka semua cell berurutan</td></tr>
+  <tr><td><code>stop</code></td><td>Matikan semua solenoid &amp; kosongkan antrean</td></tr>
+  <tr><td><code>stat</code></td><td>Tabel status semua cell (level GPIO pintu, pintu, LED, solenoid, antrean, jumlah dibuka)</td></tr>
+  <tr><td><code>diag</code></td><td><code>stat</code> + level logika yang dipakai + statistik RS485 (rx, tx, CRC error, dll.) + uptime &amp; alasan reset</td></tr>
+  <tr><td><code>help</code></td><td>Daftar perintah</td></tr>
+</table>
+<pre><code>==================================================================
+ LOCKER CONTROLLER ESP32-S3  |  FW 1.0.1  |  Node 01  |  10 cell
+ RS485 UART1 38400 bps 8N1 (TX=GPIO17, RX=GPIO18, DE=-1)
+ Pulse solenoid 1000 ms, maks 1 aktif bersamaan | reset: POWERON
+ Self-test CRC-8: OK
+==================================================================
+[    12.418] RS485 | OPEN 3 -&gt; STARTED
+[    12.418] CELL 03 | SOLENOID ON  (1000 ms)
+[    12.702] CELL 03 | PINTU TERBUKA  -&gt; LED ON
+[    13.418] CELL 03 | SOLENOID OFF
+[    18.955] CELL 03 | PINTU TERTUTUP -&gt; LED OFF</code></pre>
+
+<h3>Pemeriksaan otomatis saat compile</h3>
+<p>Firmware sengaja <b>gagal compile</b> dengan pesan berbahasa Indonesia bila: board bukan ESP32-S3, USB CDC On Boot = Enabled, PSRAM/Flash = OPI,
+ada <b>GPIO ganda</b> (mis. GPIO15 dipakai dua fungsi seperti di dokumen awal), atau memakai GPIO terlarang (22&ndash;32 flash, 43/44 UART0).</p>
+
+<!-- ===================================================================== -->
+<h2 id="raspi">7. Program Raspberry Pi</h2>
+<table>
+  <tr><th>File</th><th>Isi</th></tr>
+  <tr><td><code>app.py</code></td><td>Entry point. Membaca config, menjalankan thread master RS485 dan web server lokal (<code>http://127.0.0.1:8080</code>) yang menyajikan UI + API JSON</td></tr>
+  <tr><td><code>rs485_master.py</code></td><td>Satu-satunya thread yang berbicara ke ESP32: antrean perintah (STOP didahulukan), polling STAT, retry, deteksi offline/restart, log event, pelacak test per cell</td></tr>
+  <tr><td><code>protocol.py</code></td><td>Pembuat &amp; pengurai frame, CRC-8, parser balasan STAT</td></tr>
+  <tr><td><code>esp32_simulator.py</code></td><td>Tiruan ESP32 (logika sama dengan firmware) untuk mode <code>--sim</code> dan test otomatis</td></tr>
+  <tr><td><code>web/</code></td><td>UI (HTML/CSS/JS murni, tanpa internet/CDN)</td></tr>
+  <tr><td><code>logs/locker.log</code></td><td>Log aktivitas (dibuat otomatis, rotasi 5 &times; 1 MB)</td></tr>
+</table>
+
+<h3>config.json</h3>
+<table>
+  <tr><th>Kunci</th><th>Default</th><th>Keterangan</th></tr>
+  <tr><td><code>serial_port</code></td><td>/dev/serial0</td><td>UART GPIO14/15. Bisa juga <code>/dev/ttyUSB0</code> bila memakai adaptor USB-RS485</td></tr>
+  <tr><td><code>baudrate</code></td><td>38400</td><td>Harus sama dengan <code>RS485_BAUD</code> firmware</td></tr>
+  <tr><td><code>node_address</code></td><td>1</td><td>Harus sama dengan <code>NODE_ADDRESS</code> firmware</td></tr>
+  <tr><td><code>num_cells</code></td><td>10</td><td>Jumlah cell</td></tr>
+  <tr><td><code>poll_interval_ms</code> / <code>response_timeout_ms</code></td><td>150 / 200</td><td>Periode polling STAT / batas waktu balasan</td></tr>
+  <tr><td><code>command_retries</code> / <code>offline_after_failures</code></td><td>3 / 3</td><td>Retry perintah OPEN/STOP / jumlah gagal berturut sebelum OFFLINE</td></tr>
+  <tr><td><code>solenoid_detect_timeout_s</code></td><td>3</td><td>Test GAGAL bila solenoid tidak terlihat aktif</td></tr>
+  <tr><td><code>door_open_timeout_s</code></td><td>4</td><td>Test GAGAL bila pintu tidak terbuka setelah solenoid OFF</td></tr>
+  <tr><td><code>unauthorized_open_window_s</code></td><td>10</td><td>Pintu terbuka lebih dari 10 s setelah perintah terakhir dianggap "tanpa perintah"</td></tr>
+  <tr><td><code>test_timeout_s</code></td><td>120</td><td>Batas waktu satu test (dihitung sejak cell dilayani, waktu antre tidak dihitung). Mencegah cell tertahan "SEDANG DITES" selamanya</td></tr>
+  <tr><td><code>http_host</code> / <code>http_port</code></td><td>127.0.0.1 / 8080</td><td>Default hanya bisa diakses dari Pi sendiri. Isi <code>0.0.0.0</code> untuk akses dari jaringan (tanpa login, gunakan hanya di jaringan tertutup)</td></tr>
+</table>
+
+<h3>API lokal (dipakai UI)</h3>
+<table>
+  <tr><th>Endpoint</th><th>Fungsi</th></tr>
+  <tr><td><code>GET /api/state</code></td><td>Status lengkap: link RS485, 10 cell, ringkasan, 80 event terakhir</td></tr>
+  <tr><td><code>POST /api/open</code> <code>{"cell": n}</code></td><td>Buka cell n</td></tr>
+  <tr><td><code>POST /api/open_all</code></td><td>Buka semua cell berurutan</td></tr>
+  <tr><td><code>POST /api/stop</code></td><td>STOP darurat</td></tr>
+  <tr><td><code>POST /api/test/reset</code></td><td>Reset hasil test &amp; hitungan</td></tr>
+  <tr><td><code>POST /api/sim/door</code> <code>{"cell": n}</code></td><td>(hanya mode simulasi) buka/tutup pintu</td></tr>
+</table>
+
+<figure>
+  <div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" role="img" aria-label="Flowchart program Raspberry Pi" style="font-family:Segoe UI, Roboto, 'DejaVu Sans', Arial, sans-serif"><defs><marker id="a_059669" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker><marker id="a_059669s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker><marker id="a_2563eb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker><marker id="a_2563ebs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker><marker id="a_475569" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker><marker id="a_475569s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker><marker id="a_94a3b8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker><marker id="a_94a3b8s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker><marker id="a_e11d48" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/></marker><marker id="a_e11d48s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/></marker></defs><text x="195" y="22" font-size="13" text-anchor="middle" fill="#2563eb" font-weight="700" style="">Program utama (app.py) &amp; UI</text><text x="610" y="22" font-size="13" text-anchor="middle" fill="#2563eb" font-weight="700" style="">Thread master RS485 (rs485_master.py)</text><rect x="45.0" y="40.0" width="300" height="40" rx="20.0" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="195" y="64.55" font-size="13" text-anchor="middle" fill="#ffffff" font-weight="700" style="">MULAI app.py (service systemd)</text><rect x="35.0" y="110.0" width="320" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="195" y="131.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Baca config.json</text><text x="195" y="147.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">(port, baudrate, alamat, timing)</text><rect x="35.0" y="189.0" width="320" height="42" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="195" y="214.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Jalankan thread master RS485  ▶</text><rect x="35.0" y="260.0" width="320" height="50" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="195" y="281.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Jalankan web server lokal</text><text x="195" y="297.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">http://127.0.0.1:8080</text><polygon points="42.0,340.0 360.0,340.0 348.0,400.0 30.0,400.0" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="195" y="358.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Chromium kiosk menampilkan UI</text><text x="195" y="374.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">GET /api/state tiap 250 ms</text><text x="195" y="390.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">→ gambar status 10 cell + log</text><polygon points="42.0,440.0 360.0,440.0 348.0,500.0 30.0,500.0" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="195" y="458.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Operator klik BUKA / Buka Semua</text><text x="195" y="474.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">/ STOP → POST /api/...</text><text x="195" y="490.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">→ perintah masuk antrean</text><polyline points="195,80.0 195,110.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="195,160.0 195,189.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="195,231.0 195,260.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="195,310.0 195,340.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="195,400.0 195,440.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="30,470 15,470 15,370 36,370" fill="none" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#a_94a3b8)"/><rect x="500.0" y="40.0" width="220" height="40" rx="20.0" fill="#0f172a" stroke="#0f172a" stroke-width="1.6"/><text x="610" y="64.55" font-size="13" text-anchor="middle" fill="#ffffff" font-weight="700" style="">Thread master</text><polyline points="355.0,210 427.5,210 427.5,60 500.0,60" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_2563eb)"/><polygon points="610,102.0 720.0,145 610,188.0 500.0,145" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="610" y="141.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Port serial</text><text x="610" y="157.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">terbuka ?</text><rect x="760.0" y="117.0" width="220" height="56" rx="8" fill="#fff1f2" stroke="#e11d48" stroke-width="1.6"/><text x="870" y="141.55" font-size="13" text-anchor="middle" fill="#881337" font-weight="normal" style="">Buka port. Gagal → PORT ERROR</text><text x="870" y="157.55" font-size="13" text-anchor="middle" fill="#881337" font-weight="normal" style="">di UI, coba lagi 2 detik</text><polygon points="610,220.0 720.0,265 610,310.0 500.0,265" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="610" y="261.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Ada perintah UI</text><text x="610" y="277.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">di antrean ?</text><rect x="760.0" y="237.0" width="220" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="870" y="261.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Kirim OPEN n / STOP,</text><text x="870" y="277.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">tunggu ACK (retry maks 3×)</text><rect x="760.0" y="332.0" width="220" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="870" y="356.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Update status cell &amp; log,</text><text x="870" y="372.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">mulai pelacakan test</text><rect x="485.0" y="362.0" width="250" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="610" y="386.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Tiap 150 ms kirim &gt;01,STAT*CC</text><text x="610" y="402.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">(PING dulu bila baru terhubung)</text><polygon points="610,457.0 725.0,505 610,553.0 495.0,505" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/><text x="610" y="493.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Balasan valid</text><text x="610" y="509.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">(CRC &amp; format)</text><text x="610" y="525.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">≤ 200 ms ?</text><rect x="760.0" y="477.0" width="220" height="56" rx="8" fill="#fff1f2" stroke="#e11d48" stroke-width="1.6"/><text x="870" y="501.55" font-size="13" text-anchor="middle" fill="#881337" font-weight="normal" style="">timeout / error++</text><text x="870" y="517.55" font-size="13" text-anchor="middle" fill="#881337" font-weight="normal" style="">3× gagal berturut → OFFLINE</text><rect x="445.0" y="605.0" width="330" height="80" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="610" y="625.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Update pintu / LED / solenoid 10 cell</text><text x="610" y="641.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">perubahan → log event (+ peringatan</text><text x="610" y="657.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">buka tanpa perintah, restart ESP32)</text><text x="610" y="673.55" font-size="13" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">evaluasi langkah test → LULUS / GAGAL</text><polyline points="610,80.0 610,102.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="720.0,145 760.0,145" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="726" y="137" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="870,117 870,95 610,95 610,102" fill="none" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#a_94a3b8)"/><polyline points="610,188.0 610,220.0" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="616.0" y="198.0" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="720.0,265 760.0,265" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="726" y="257" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="870,293.0 870,332.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="610,310.0 610,362.0" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="616.0" y="330.0" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="610,418.0 610,457.0" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="725.0,505 760.0,505" fill="none" stroke="#e11d48" stroke-width="1.6" marker-end="url(#a_e11d48)"/><text x="730" y="497" font-size="12" text-anchor="start" fill="#e11d48" font-weight="600" style="">Tidak</text><polyline points="610,553.0 610,605.0" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><text x="616.0" y="573.0" font-size="12" text-anchor="start" fill="#059669" font-weight="600" style="">Ya</text><polyline points="445,645 440,645 440,265 500,265" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a_475569)"/><polyline points="870,533 870,590 440,590" fill="none" stroke="#475569" stroke-width="1.6"/><polyline points="980,360 990,360 990,222 610,222" fill="none" stroke="#475569" stroke-width="1.6"/><text x="448" y="460" font-size="12" text-anchor="start" fill="#475569" font-weight="600" style="">ulangi</text><text x="500" y="760" font-size="12" text-anchor="middle" fill="#475569" font-weight="normal" style="">Semua komunikasi RS485 dilakukan satu thread saja (master–slave): ESP32 hanya berbicara bila ditanya, sehingga tidak ada tabrakan data di bus.</text></svg></div>
+  <figcaption>Gambar 5 &mdash; Flowchart program Raspberry Pi</figcaption>
+</figure>
+
+<h3>Pelacak hasil test per cell</h3>
+<p>Setiap kali perintah BUKA diterima ESP32 (ACK), cell masuk status <b>SEDANG DITES</b>. Enam langkah dicentang otomatis dari data STAT.
+Test <b>LULUS</b> bila keenam langkah terjadi; <b>GAGAL</b> bila salah satu batas waktu terlewati. Pesan penyebab tampil di kartu cell dan log.
+Test hanya dimulai oleh perintah BUKA dari operator; saat program atau Raspberry Pi restart semua cell kembali <b>BELUM DITES</b> (standby).
+Saat terhubung, program juga memeriksa versi firmware ESP32 dan menampilkan peringatan di log bila masih di bawah v1.0.1.</p>
+<figure>
+  <div class="frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" role="img" aria-label="Alur test per cell" style="font-family:Segoe UI, Roboto, 'DejaVu Sans', Arial, sans-serif"><defs><marker id="a_059669" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker><marker id="a_059669s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker><marker id="a_e11d48" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/></marker><marker id="a_e11d48s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/></marker></defs><rect x="14.0" y="42.0" width="112" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="70" y="66.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Perintah</text><text x="70" y="81.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">BUKA (ACK)</text><text x="70" y="32" font-size="11" text-anchor="middle" fill="#64748b" font-weight="normal" style="">langkah 1</text><rect x="152.0" y="42.0" width="112" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="208" y="66.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Solenoid</text><text x="208" y="81.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">aktif</text><text x="208" y="32" font-size="11" text-anchor="middle" fill="#64748b" font-weight="normal" style="">langkah 2</text><polyline points="126.0,70 152.0,70" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><rect x="290.0" y="42.0" width="112" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="346" y="66.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Pintu</text><text x="346" y="81.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">terbuka</text><text x="346" y="32" font-size="11" text-anchor="middle" fill="#64748b" font-weight="normal" style="">langkah 3</text><polyline points="264.0,70 290.0,70" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><rect x="428.0" y="42.0" width="112" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="484" y="74.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">LED ON</text><text x="484" y="32" font-size="11" text-anchor="middle" fill="#64748b" font-weight="normal" style="">langkah 4</text><polyline points="402.0,70 428.0,70" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><rect x="566.0" y="42.0" width="112" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="622" y="66.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">Pintu</text><text x="622" y="81.7" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">tertutup</text><text x="622" y="32" font-size="11" text-anchor="middle" fill="#64748b" font-weight="normal" style="">langkah 5</text><polyline points="540.0,70 566.0,70" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><rect x="704.0" y="42.0" width="112" height="56" rx="8" fill="#eef6ff" stroke="#2563eb" stroke-width="1.6"/><text x="760" y="74.2" font-size="12" text-anchor="middle" fill="#0f172a" font-weight="normal" style="">LED OFF</text><text x="760" y="32" font-size="11" text-anchor="middle" fill="#64748b" font-weight="normal" style="">langkah 6</text><polyline points="678.0,70 704.0,70" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><rect x="863.0" y="42.0" width="90" height="56" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/><text x="908" y="74.9" font-size="14" text-anchor="middle" fill="#065f46" font-weight="700" style="">LULUS</text><polyline points="816.0,70 863.0,70" fill="none" stroke="#059669" stroke-width="1.6" marker-end="url(#a_059669)"/><rect x="150.0" y="220.0" width="660" height="50" rx="8" fill="#fff1f2" stroke="#e11d48" stroke-width="1.6"/><text x="480" y="249.55" font-size="13" text-anchor="middle" fill="#881337" font-weight="700" style="">GAGAL — pesan penyebab tampil di kartu cell &amp; log aktivitas</text><polyline points="208,98 208,220" fill="none" stroke="#e11d48" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_e11d48)"/><text x="214" y="128" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">solenoid tidak terlihat</text><text x="214" y="142" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">aktif ≤ 3 s</text><polyline points="346,98 346,220" fill="none" stroke="#e11d48" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_e11d48)"/><text x="352" y="128" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">pintu tidak terbuka</text><text x="352" y="142" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">≤ 4 s setelah solenoid OFF</text><polyline points="484,98 484,220" fill="none" stroke="#e11d48" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_e11d48)"/><text x="490" y="128" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">LED tidak ON ≤ 1 s</text><text x="490" y="142" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">saat pintu terbuka</text><polyline points="622,98 622,220" fill="none" stroke="#e11d48" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_e11d48)"/><text x="628" y="128" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">pintu tidak tertutup</text><text x="628" y="142" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">≤ 120 s (batas test)</text><polyline points="760,98 760,220" fill="none" stroke="#e11d48" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#a_e11d48)"/><text x="766" y="128" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">LED tidak OFF ≤ 1 s</text><text x="766" y="142" font-size="11" text-anchor="start" fill="#e11d48" font-weight="normal" style="">saat pintu tertutup</text></svg></div>
+  <figcaption>Gambar 6 &mdash; Alur test per cell</figcaption>
+</figure>
+
+<!-- ===================================================================== -->
+<h2 id="ui">8. Tampilan UI &amp; cara pakai</h2>
+<figure>
+  <div class="frame"><img src="img/ui_1920x1080.png" alt="Tampilan UI Locker Cell Tester pada layar 1920x1080"></div>
+  <figcaption>Gambar 7 &mdash; UI pada monitor 1920&times;1080. Cell 01 &amp; 03 lulus, cell 04 &amp; 09 terbuka (LED ON), cell 09 solenoid aktif, cell 10 antre, cell 07 gagal, cell 06 dibuka tanpa perintah.
+  UI juga pas tanpa scroll di 1366&times;768.</figcaption>
+</figure>
+<table>
+  <tr><th>Elemen</th><th>Arti</th></tr>
+  <tr><td>Kartu cell</td><td>Gambar pintu locker: <b>berayun terbuka</b> saat pintu terbuka, strip LED di dalam <b>menyala kuning</b> saat LED ON. Bingkai kuning = pintu terbuka, bingkai cyan menyala = solenoid aktif, bingkai putus-putus = antre, abu-abu = data tidak valid (offline)</td></tr>
+  <tr><td>Bar tipis di bawah pintu</td><td>Progres pulse solenoid 1 detik</td></tr>
+  <tr><td>LED / SOLENOID</td><td>Status output GPIO ESP32: ON/OFF, AKTIF/OFF/ANTRE</td></tr>
+  <tr><td>6 segmen + badge</td><td>Langkah test (hijau = selesai, biru berkedip = sedang ditunggu, merah = gagal). Badge: BELUM DITES / SEDANG DITES / LULUS / GAGAL</td></tr>
+  <tr><td>Tombol BUKA</td><td>Nonaktif saat ESP32 offline, perintah sedang dikirim, solenoid aktif, atau cell antre</td></tr>
+  <tr><td>Header kanan</td><td>Status link: <b>ESP32 ONLINE</b> (hijau), MENGHUBUNGKAN (kuning), <b>OFFLINE / PORT ERROR / SERVER MATI</b> (merah) + port, baudrate, waktu respon</td></tr>
+  <tr><td>Panel kanan</td><td>Ringkasan, kontrol (Buka Semua dengan konfirmasi, STOP, Reset Test), statistik RS485 (TX/RX, timeout, CRC error, uptime ESP32), log aktivitas</td></tr>
+</table>
+<p class="small">Keluar dari mode kiosk: <kbd>Alt</kbd>+<kbd>F4</kbd>. UI mendukung mouse maupun layar sentuh.</p>
+
+<!-- ===================================================================== -->
+<h2 id="instalasi">9. Instalasi &amp; menjalankan</h2>
+<h3>9.1 ESP32-S3</h3>
+<ol>
+  <li>Arduino IDE &rarr; <i>Boards Manager</i> &rarr; pasang <b>esp32 by Espressif Systems</b> (v3.x).</li>
+  <li>Buka <code>esp32/LockerController/LockerController.ino</code>.</li>
+  <li>Atur menu Tools sesuai tabel di bagian 6. Hubungkan kabel ke port <b>UART/COM</b> board.</li>
+  <li>Klik <b>Upload</b>. Bila upload tidak mulai: tahan tombol <kbd>BOOT</kbd>, tekan <kbd>RST</kbd>, lepas <kbd>BOOT</kbd>.</li>
+  <li>Buka Serial Monitor 115200 &rarr; pastikan banner muncul dan <i>Self-test CRC-8: OK</i>. Ketik <code>diag</code> untuk memeriksa level pintu.</li>
+</ol>
+
+<h3>9.2 Raspberry Pi 4B (Raspberry Pi OS Desktop, Bookworm/Bullseye)</h3>
+<ol>
+  <li>Salin folder <code>LockerCellTester</code> ke Raspberry Pi, mis. ke <code>/home/pi/LockerCellTester</code> (flashdisk atau <code>scp</code>).</li>
+  <li>Buka Terminal lalu jalankan:
+<pre><code>cd ~/LockerCellTester/raspi
+bash install.sh
+sudo reboot</code></pre>
+  Installer memasang <code>python3-serial</code> &amp; Chromium, menambah user ke grup <code>dialout</code>, mengaktifkan UART GPIO14/15 (<code>enable_uart=1</code>, <code>dtoverlay=disable-bt</code>, console serial dimatikan, backup file boot dibuat),
+  memasang service <code>locker-tester</code> dan autostart UI kiosk. Bluetooth dinonaktifkan agar UART PL011 stabil; bila Bluetooth dibutuhkan jalankan <code>KEEP_BT=1 bash install.sh</code>.</li>
+  <li>Setelah reboot, UI tampil layar penuh otomatis.</li>
+</ol>
+<h4>RTC DS3231</h4>
+<pre><code>cd ~/LockerCellTester/raspi
+bash setup_rtc.sh          # I2C, overlay i2c-rtc,ds3231, service sinkronisasi, isi RTC dari NTP
+sudo reboot
+bash setup_rtc.sh --check  # cek: 0x68 = UU, /dev/rtc0, waktu RTC vs sistem, timer</code></pre>
+<p>Saat boot jam sistem diambil dari RTC (kernel + service <code>locker-rtc</code>), sehingga jam tetap benar walaupun listrik mati dan internet tidak ada.
+Setiap jam (dan 3 menit setelah boot), waktu internet disimpan ke RTC oleh <code>locker-rtc-save.timer</code>, tetapi <b>hanya bila sudah tersinkron NTP</b>, supaya jam yang salah tidak pernah menimpa RTC.
+<code>fake-hwclock</code> dinonaktifkan. RTC menyimpan UTC; tampilan mengikuti zona waktu sistem (Asia/Jakarta, WIB).</p>
+
+<h4>Memperbarui program dari PC</h4>
+<pre><code>cd D:/Claude
+scp -r LockerCellTester pi@10.10.0.30:~/
+ssh pi@10.10.0.30 "sudo systemctl restart locker-tester"</code></pre>
+
+<h4>Menjalankan manual / simulasi</h4>
+<pre><code>cd ~/LockerCellTester/raspi
+python3 app.py --sim                 # simulasi tanpa hardware, buka http://127.0.0.1:8080
+python3 app.py --sim --sim-faulty 7  # simulasi dengan cell 7 "rusak" (test GAGAL)
+python3 app.py --port /dev/ttyUSB0   # hardware, port lain
+bash start.sh                        # backend + UI kiosk (hentikan service dulu)
+python3 -m unittest discover -s tests -v   # jalankan 27 test otomatis</code></pre>
+<h4>Perintah service</h4>
+<pre><code>systemctl status locker-tester        # status backend
+journalctl -u locker-tester -f        # log langsung
+sudo systemctl restart locker-tester  # restart setelah mengubah config.json
+sudo systemctl disable --now locker-tester   # nonaktifkan
+rm ~/.config/autostart/locker-kiosk.desktop # hentikan autostart kiosk</code></pre>
+
+<!-- ===================================================================== -->
+<h2 id="prosedur">10. Prosedur test fungsi (commissioning)</h2>
+<ol>
+  <li><b>ESP32 saja (tanpa Raspberry Pi).</b> Serial Monitor &rarr; banner harus <i>FW 1.0.1</i>. <code>stat</code>: semua pintu yang tertutup harus terbaca TERTUTUP (cell tanpa sensor terbaca TERBUKA + LED ON, normal). Buka satu pintu dengan tangan &rarr; log <i>PINTU TERBUKA &rarr; LED ON</i> dan LED fisik menyala. Jika terbalik, ubah <code>DOOR_CLOSED_LEVEL</code>.</li>
+  <li><b>Uji boot GPIO45:</b> tutup pintu 1, matikan lalu nyalakan catu ESP32. ESP32 harus boot normal (banner muncul / UI kembali ONLINE). Bila tidak, lihat temuan GPIO45 di bagian 2.</li>
+  <li>Ketik <code>open 1</code> s.d. <code>open 10</code>: solenoid tiap cell harus berbunyi/aktif 1 detik dan pintu terbuka. Perhatikan khusus <b>Solenoid 8&ndash;10</b> bila modul ber-PSRAM octal.</li>
+  <li><b>Hubungkan RS485.</b> Nyalakan Raspberry Pi &rarr; header UI harus <b>ESP32 ONLINE</b>, log berisi <i>ESP32 terhubung · FW 1.0.0</i>. Nilai timeout &amp; CRC error seharusnya tetap 0.</li>
+  <li>Tekan <b>BUKA</b> tiap cell: solenoid AKTIF, pintu TERBUKA, LED ON, lalu tutup pintu &rarr; badge <b>LULUS</b>.</li>
+  <li>Tekan <b>Buka Semua</b> &rarr; semua cell terbuka bergantian 1 detik. Pastikan ESP32 tidak restart (tidak ada peringatan <i>restart / BROWNOUT</i> di log).</li>
+  <li>Uji <b>STOP</b> saat Buka Semua berjalan: antrean berhenti.</li>
+  <li>Cabut kabel RS485 sesaat &rarr; UI menampilkan OFFLINE; pasang kembali &rarr; ONLINE otomatis.</li>
+</ol>
+
+<!-- ===================================================================== -->
+<h2 id="troubleshooting">11. Troubleshooting</h2>
+<table>
+  <tr><th>Gejala</th><th>Kemungkinan penyebab &amp; solusi</th></tr>
+  <tr><td>Compile error "USB CDC On Boot harus Disabled" / "PSRAM jangan OPI" / "PIN GANDA"</td><td>Setting Arduino IDE atau peta pin salah. Ikuti pesan error (bagian 2 &amp; 6).</td></tr>
+  <tr><td>ESP32 tidak mau boot / boot loop saat pintu 1 tertutup</td><td>GPIO45 (Indikator Pintu 1) HIGH saat boot. Pastikan wiring kontak ke GND tanpa pull-up eksternal, atau burn eFuse flash 3,3 V.</td></tr>
+  <tr><td>UI: <b>PORT ERROR</b></td><td>UART belum aktif atau izin. Jalankan <code>install.sh</code>, reboot, cek <code>ls -l /dev/serial0</code>. Pastikan user ada di grup <code>dialout</code>.</td></tr>
+  <tr><td>UI: <b>ESP32 OFFLINE</b>, TX bertambah tetapi RX 0</td><td>Tukar TX/RX di modul, periksa A&ndash;A B&ndash;B &amp; GND, samakan baudrate (38400) &amp; alamat (01), pastikan ESP32 menyala. Cek <code>diag</code> di ESP32: bila <i>rx</i> bertambah berarti data Pi sampai.</td></tr>
+  <tr><td>CRC error sering bertambah</td><td>Kabel terlalu panjang/tanpa twisted pair, tidak ada GND bersama, terminasi 120 &Omega; kurang/berlebih, noise dari kabel solenoid. Turunkan baudrate (mis. 19200) di kedua sisi.</td></tr>
+  <tr><td>Peringatan "ESP32 restart" / reset BROWNOUT saat solenoid aktif</td><td>Catu daya drop. Pisahkan catu solenoid, tambah kapasitor elko besar, pastikan dioda flyback terpasang.</td></tr>
+  <tr><td>Status pintu terbalik (tertutup terbaca terbuka)</td><td>Pastikan firmware ESP32 sudah v1.0.1 (log UI memberi peringatan bila versi lama). Bila masih terbalik, ubah <code>DOOR_CLOSED_LEVEL</code> (HIGH &harr; LOW).</td></tr>
+  <tr><td>Log: "Firmware ESP32 v1.0.0 versi lama"</td><td>Upload <code>esp32/LockerController/LockerController.ino</code> (v1.0.1) lewat Arduino IDE.</td></tr>
+  <tr><td>Pintu 5 atau 6 selalu terbaca salah / cell 5 tertahan "SEDANG DITES"</td><td>Firmware v1.0.0 (pull-up USB D+ aktif) &rarr; upload v1.0.1. Atau kabel masih tercolok di port "USB" (native), atau USB CDC On Boot aktif. Pakai port UART saja.</td></tr>
+  <tr><td>Cell tanpa sensor tampil TERBUKA &amp; LED menyala</td><td>Normal sesuai spesifikasi: tidak ada input = pintu terbuka. Pasang sensor pintu cell tersebut.</td></tr>
+  <tr><td>Jam salah setelah listrik mati tanpa internet</td><td><code>bash setup_rtc.sh --check</code>. Harus tampil 0x68 = <code>UU</code> dan <code>/dev/rtc0</code>. Cek wiring SDA/SCL dan baterai CR2032 modul RTC.</td></tr>
+  <tr><td>Log locker-rtc: "waktu RTC tidak valid"</td><td>RTC belum pernah di-set / baterai habis. Sambungkan internet sebentar lalu jalankan <code>sudo /usr/local/sbin/locker-rtc save</code>.</td></tr>
+  <tr><td>Solenoid 8/9/10 tidak bekerja atau ESP32 crash</td><td>Modul ber-PSRAM octal (N8R8/N16R8). Lihat temuan GPIO35&ndash;37 di bagian 2.</td></tr>
+  <tr><td>Test GAGAL "Pintu tidak terbuka"</td><td>Solenoid tidak menarik (driver/catu/kabel), mekanik pintu macet, atau sensor pintu tidak berubah.</td></tr>
+  <tr><td>UI tidak muncul setelah boot</td><td><code>systemctl status locker-tester</code>; jalankan <code>~/LockerCellTester/raspi/kiosk.sh</code> manual untuk melihat error. Layar mati otomatis: raspi-config &rarr; Display &rarr; Screen Blanking &rarr; No.</td></tr>
+</table>
+
+<!-- ===================================================================== -->
+<h2 id="qc">12. Hasil QC program</h2>
+<table>
+  <tr><th>Pemeriksaan</th><th>Metode</th><th class="c">Hasil</th></tr>
+  <tr><td>Firmware ESP32 v1.0.1 compile untuk ESP32-S3</td><td>arduino-cli + core esp32 3.3.12, <code>--warnings all</code>: 0 warning, 308 KB flash (23%), RAM 22 KB (6%)</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>Pull-up USB D+ pada GPIO20 (akar bug cell 5)</td><td>Diverifikasi dari source HAL ESP-IDF di core 3.3.12: pull-up D+ hanya mati bila pin tanpa pull-up &rarr; v1.0.1 memakai pull-down + override resistor PHY USB</td><td class="c"><span class="tag ok">DIPERBAIKI</span></td></tr>
+  <tr><td>Proteksi USB CDC On Boot = Enabled</td><td>Compile dengan setting salah &rarr; ditolak dengan pesan jelas</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>Proteksi PSRAM = OPI</td><td>Compile dengan OPI PSRAM &rarr; ditolak; QSPI PSRAM &rarr; diterima</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>Proteksi pin ganda (GPIO15 seperti dokumen awal)</td><td>Compile dengan Indikator Pintu 1 = GPIO15 &rarr; <code>static_assert</code> "PIN GANDA"</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>Protokol &amp; CRC-8</td><td>Unit test: nilai cek F4, roundtrip, deteksi CRC salah, frame rusak, STAT tidak valid</td><td class="c"><span class="tag ok">10/10</span></td></tr>
+  <tr><td>Master &harr; simulator ESP32</td><td>Siklus penuh buka cell (LULUS), Buka Semua berurutan FIFO dengan maks 1 solenoid aktif, cell rusak (GAGAL), buka tanpa perintah, STOP mengosongkan antrean, offline &amp; pulih otomatis, deteksi restart BROWNOUT, jalur RS485 ber-noise (CRC error + echo), semua cell standby saat start, peringatan firmware lama, batas waktu test pintu macet</td><td class="c"><span class="tag ok">12/12</span></td></tr>
+  <tr><td>Web server &amp; API</td><td>File statis, JSON state, open/error 400/404/409, blokir path traversal, simulasi pintu, reset test</td><td class="c"><span class="tag ok">5/5</span></td></tr>
+  <tr><td>Stabilitas test</td><td>27 test dijalankan berulang di PC (Python 3.14), dengan ResourceWarning sebagai error</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>Test di Raspberry Pi asli</td><td>27 test dijalankan langsung di Raspberry Pi 4B, Raspberry Pi OS Bullseye, Python 3.9.2</td><td class="c"><span class="tag ok">27/27</span></td></tr>
+  <tr><td>RS485 hardware asli</td><td>Raspberry Pi &harr; ESP32 (FW 1.0.0): 14.824 transaksi, 0 timeout, 0 CRC error; perintah buka cell bekerja</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>Standby setelah reboot</td><td>Reboot Raspberry Pi: 10 cell BELUM DITES, tidak ada perintah buka / solenoid / antrean otomatis</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>RTC DS3231</td><td>Terdeteksi 0x68 (UU, driver rtc-ds1307), RTC diisi dari NTP, jam sistem dimundurkan 1 jam tanpa NTP &rarr; dipulihkan dari RTC, RTC tidak ditimpa saat belum sinkron NTP, setelah reboot jam diset dari RTC pada detik ke-8 boot</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>UI</td><td>Diuji di browser 1920&times;1080 &amp; 1366&times;768: tanpa scroll/overflow, 0 error console, klik BUKA, Buka Semua + konfirmasi, cell gagal, tampilan PORT ERROR &amp; SERVER MATI</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+  <tr><td>Skrip shell</td><td><code>bash -n</code> install.sh / kiosk.sh / start.sh / setup_rtc.sh, line ending LF</td><td class="c"><span class="tag ok">LULUS</span></td></tr>
+</table>
+<div class="callout warn">
+  <p><b>Perlu diverifikasi operator di hardware:</b> firmware v1.0.1 harus di-upload ke ESP32 lalu dicek: status pintu &amp; LED fisik sesuai kondisi pintu (termasuk cell 5), dan ESP32 tetap bisa boot saat pintu 1 tertutup (GPIO45).
+  Pembacaan level sensor diverifikasi dari log hardware nyata; logika firmware diverifikasi lewat compile nyata + simulator.</p>
+</div>
+
+<!-- ===================================================================== -->
+<h2 id="riwayat">13. Riwayat perubahan</h2>
+<table>
+  <tr><th>Versi</th><th>Perubahan</th></tr>
+  <tr><td><b>1.0.1</b><br><span class="small">23 Sep 2026</span></td><td>
+    <b>Firmware:</b> logika indikator pintu disesuaikan dengan PCB (tertutup = HIGH, <code>INPUT_PULLDOWN</code>); pull-up USB D+ pada GPIO20 dimatikan, sehingga pintu 5 tidak lagi selalu terbaca terbuka (penyebab cell 5 tertahan "SEDANG DITES").<br>
+    <b>Raspberry Pi:</b> batas waktu test 120 s (tidak ada cell tertahan selamanya), peringatan bila firmware ESP32 lama, log asal setiap perintah dari UI, izin folder dirapikan.<br>
+    <b>Baru:</b> RTC DS3231 (<code>setup_rtc.sh</code>, service <code>locker-rtc</code> + timer simpan tiap jam).</td></tr>
+  <tr><td>1.0.0</td><td>Rilis awal.</td></tr>
+</table>
+
+</main>
+</body>
+</html>

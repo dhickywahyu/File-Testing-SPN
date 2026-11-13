@@ -1,0 +1,21 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# PlatformIO build output
+.pio/
+
+# Secrets - never commit real env files (keep *.env.example)
+.env
+!.env.example
+
+# Private company repos - clone from github.com/soulparking instead
+spn-gate/
+spn-dds-hardware/
+
+# OS junk
+Thumbs.db
+desktop.ini
+.DS_Store

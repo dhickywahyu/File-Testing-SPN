@@ -1,0 +1,18 @@
+{
+  "serial_port": "/dev/serial0",
+  "baudrate": 38400,
+  "node_address": 1,
+  "num_cells": 10,
+  "poll_interval_ms": 150,
+  "response_timeout_ms": 200,
+  "command_retries": 3,
+  "offline_after_failures": 3,
+  "reconnect_interval_s": 2,
+  "solenoid_pulse_ms": 1000,
+  "solenoid_detect_timeout_s": 3,
+  "door_open_timeout_s": 4,
+  "unauthorized_open_window_s": 10,
+  "test_timeout_s": 120,
+  "http_host": "127.0.0.1",
+  "http_port": 8080
+}

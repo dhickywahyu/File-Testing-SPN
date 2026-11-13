@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCB QC Tester</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">QC</div>
+      <div>
+        <h1>PCB QC Tester</h1>
+        <div class="sub">Raspberry Pi 4B &middot; Konfigurasi GPIO PCB v3.3 <span id="simBadge" class="tag warn hidden">MODE SIMULASI</span></div>
+      </div>
+    </div>
+    <div class="top-verdict" id="topVerdict"><span class="dot"></span><span id="topVerdictText">Memuat…</span></div>
+    <div class="top-right">
+      <div class="conn" id="conn"><span class="dot"></span><span id="connText">Menghubungkan…</span></div>
+      <div class="clock">
+        <div class="clock-time" id="sysTime">--:--:--</div>
+        <div class="clock-date" id="sysDate">&nbsp;</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <div class="col-main">
+
+      <!-- 1. DIGITAL INPUT -->
+      <section class="card" id="diCard">
+        <div class="card-h">
+          <span class="num">1</span>
+          <div class="card-title">
+            <h2>Digital Input &mdash; Monitoring Jalur</h2>
+            <p>Pull-down di PCB &middot; tombol ditekan = HIGH (3,3 V) &middot; <b class="t-green">hijau</b> = jalur menerima sinyal, <b class="t-red">merah</b> = tidak ada sinyal</p>
+          </div>
+          <div class="card-tools">
+            <span class="progress-chip" id="diProgress">0/16 pin teruji</span>
+            <button class="btn sm ghost" id="diReset">&#8634; Reset</button>
+            <span class="pill" id="diPill">-</span>
+          </div>
+        </div>
+        <div class="di-grid" id="diGrid"></div>
+        <div class="note">Tegangan analog tidak dapat diukur langsung karena Raspberry Pi 4B tidak memiliki ADC &mdash; yang ditampilkan adalah level logika. Kualitas sinyal dinilai dari jumlah <i>glitch/bounce</i> (pulsa &lt; 15 ms).</div>
+      </section>
+
+      <div class="row3">
+        <!-- 2. RELAY -->
+        <section class="card" id="relayCard">
+          <div class="card-h">
+            <span class="num">2</span>
+            <div class="card-title"><h2>Digital Output &mdash; Relay</h2><p id="relaySub">Kedua relay ON/OFF bersamaan</p></div>
+            <span class="pill" id="relayPill">-</span>
+          </div>
+          <div class="relay-lamps">
+            <div class="rlamp" id="rl0"><div class="bulb"></div><div class="rl-txt"><b>RELAY 1</b><small id="rl0pin">GPIO 4</small></div><span class="rstate">OFF</span></div>
+            <div class="rlamp" id="rl1"><div class="bulb"></div><div class="rl-txt"><b>RELAY 2</b><small id="rl1pin">GPIO 17</small></div><span class="rstate">OFF</span></div>
+          </div>
+          <div class="phase">
+            <div class="phase-top"><span id="relayPhase">Berhenti</span><span id="relayRemain" class="mono"></span></div>
+            <div class="bar"><div id="relayBar"></div></div>
+          </div>
+          <div class="form-grid">
+            <label>Waktu aktif<div class="inp"><input type="number" id="onS" step="0.1" min="0.1" max="3600"><span>s</span></div></label>
+            <label>Waktu mati<div class="inp"><input type="number" id="offS" step="0.1" min="0.1" max="3600"><span>s</span></div></label>
+            <button class="btn" id="relayApply">Terapkan</button>
+            <button class="btn ghost" id="relayDefault" title="Kembalikan ke nilai default">Default 1,5 / 1,0 s</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn primary" id="relayStart">&#9654; Mulai</button>
+            <button class="btn danger" id="relayStop">&#9632; Stop</button>
+            <div class="stat-inline">Siklus <b id="relayCycles">0</b></div>
+          </div>
+          <div class="confirm" data-item="relay">
+            <span>Relay berbunyi &ldquo;klik&rdquo; &amp; indikator menyala?</span>
+            <div class="cf-btns"><button class="cf ok" data-v="pass">&#10003; Ya</button><button class="cf ng" data-v="fail">&#10007; Tidak</button></div>
+          </div>
+        </section>
+
+        <!-- 3. RTC -->
+        <section class="card" id="rtcCard">
+          <div class="card-h">
+            <span class="num">3</span>
+            <div class="card-title"><h2>RTC DS3231SN#</h2><p>I2C &middot; SDA GPIO2 &middot; SCL GPIO3</p></div>
+            <span class="pill" id="rtcPill">-</span>
+          </div>
+          <div class="rtc-main">
+            <div class="rtc-time mono" id="rtcTime">--:--:--</div>
+            <div class="rtc-date" id="rtcDate">&nbsp;</div>
+            <div class="rtc-detail" id="rtcDetail">&nbsp;</div>
+          </div>
+          <dl class="kv kv2" id="rtcKv">
+            <dt>Jam sistem</dt><dd class="mono" id="rtcSys">-</dd>
+            <dt>Selisih</dt><dd class="mono" id="rtcDiff">-</dd>
+            <dt>NTP</dt><dd id="rtcNtp">-</dd>
+            <dt>Suhu chip</dt><dd class="mono" id="rtcTemp">-</dd>
+            <dt>Osilator</dt><dd id="rtcOsf">-</dd>
+            <dt>Sinkron</dt><dd id="rtcLast">-</dd>
+          </dl>
+          <div class="btn-row wrap">
+            <button class="btn sm" id="rtcS2R" title="Tulis jam sistem Raspi ke RTC">Sistem &rarr; RTC</button>
+            <button class="btn sm" id="rtcR2S" title="Setel jam sistem Raspi dari RTC">RTC &rarr; Sistem</button>
+            <button class="btn sm ghost" id="rtcClient" title="Pakai jam perangkat yang membuka halaman ini">Jam perangkat ini</button>
+          </div>
+        </section>
+
+        <!-- 4. RS485 -->
+        <section class="card" id="rsCard">
+          <div class="card-h">
+            <span class="num">4</span>
+            <div class="card-title"><h2>RS485 &harr; ESP32-S3</h2><p id="rsPort">TX GPIO14 &middot; RX GPIO15</p></div>
+            <span class="pill" id="rsPill">-</span>
+          </div>
+          <div class="rs-detail" id="rsDetail">&nbsp;</div>
+          <div class="rs-hist-wrap">
+            <div class="rs-hist-h"><span>20 paket terakhir</span><b id="rsRate">0%</b></div>
+            <div class="rs-hist" id="rsHist"></div>
+          </div>
+          <div class="metrics m6">
+            <div class="m"><span>Terkirim</span><b id="rsSent">0</b></div>
+            <div class="m good"><span>OK</span><b id="rsOk">0</b></div>
+            <div class="m"><span>Timeout</span><b id="rsTo">0</b></div>
+            <div class="m"><span>CRC</span><b id="rsCrc">0</b></div>
+            <div class="m"><span>NACK</span><b id="rsNack">0</b></div>
+            <div class="m"><span>Data beda</span><b id="rsMis">0</b></div>
+          </div>
+          <dl class="kv">
+            <dt>Waktu respon</dt><dd class="mono" id="rsRtt">-</dd>
+            <dt>ESP32</dt><dd id="rsEsp">-</dd>
+          </dl>
+          <div class="btn-row"><button class="btn sm ghost" id="rsReset">&#8634; Reset statistik</button><span class="hint" id="rsEcho"></span></div>
+        </section>
+      </div>
+
+      <!-- 5. MAX7219 -->
+      <section class="card" id="dispCard">
+        <div class="card-h">
+          <span class="num">5</span>
+          <div class="card-title"><h2>Mini Display MAX7219 &mdash; 32&times;8</h2><p id="dispPins">CLK GPIO23 &middot; CS GPIO24 &middot; DIN GPIO19</p></div>
+          <span class="pill" id="dispPill">-</span>
+        </div>
+        <div class="disp-body">
+          <div class="disp-left">
+            <div class="matrix-wrap"><canvas id="matrix"></canvas></div>
+            <div class="disp-stats">
+              <span class="ph">Sedang tampil: <b id="dispPhase">-</b></span>
+              <span>Frame <b class="mono" id="dispFrame">0</b></span>
+              <span>Kirim ke MAX7219 <b class="mono" id="dispWrite">-</b></span>
+              <span>Delay ke UI <b class="mono" id="dispLat">-</b></span>
+              <span>FPS <b class="mono" id="dispFps">-</b></span>
+            </div>
+          </div>
+          <div class="disp-ctrl">
+            <div class="cur-text"><span>Teks aktif</span><b id="dispText" class="mono">-</b></div>
+            <div class="seg" id="dispMode">
+              <button data-mode="auto">Auto Test</button>
+              <button data-mode="text">Teks</button>
+              <button data-mode="all_on">Semua Nyala</button>
+              <button data-mode="off">Mati</button>
+            </div>
+            <div class="text-row">
+              <input type="text" id="dispInput" maxlength="120" placeholder="Tulis teks untuk display…">
+              <button class="btn primary" id="dispSend">Tampilkan</button>
+            </div>
+            <div class="sliders">
+              <label>Kecerahan <b id="brVal">4</b><input type="range" id="brRange" min="0" max="15"></label>
+              <label>Kecepatan <b id="spVal">45 ms</b><input type="range" id="spRange" min="15" max="150" step="5"></label>
+              <div class="orient">
+                <span>Orientasi modul</span>
+                <div>
+                  <select id="rotSel"><option value="0">0&deg;</option><option value="90">90&deg;</option><option value="180">180&deg;</option><option value="270">270&deg;</option></select>
+                  <label class="chk" title="Cerminkan tiap modul"><input type="checkbox" id="flipChk">Cermin</label>
+                  <label class="chk" title="Balik urutan modul (kiri-kanan)"><input type="checkbox" id="revChk">Balik</label>
+                </div>
+              </div>
+            </div>
+            <div class="confirm-2">
+              <div class="confirm" data-item="disp_leds">
+                <span>Semua 256 LED menyala terang &amp; rata?</span>
+                <div class="cf-btns"><button class="cf ok" data-v="pass">&#10003; Ya</button><button class="cf ng" data-v="fail">&#10007; Ada mati</button></div>
+              </div>
+              <div class="confirm" data-item="disp_scroll">
+                <span>Teks berjalan jelas &amp; sama dengan UI?</span>
+                <div class="cf-btns"><button class="cf ok" data-v="pass">&#10003; Ya</button><button class="cf ng" data-v="fail">&#10007; Tidak</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 6. QC -->
+    <aside class="card qc" id="qcCard">
+      <div class="card-h">
+        <span class="num">6</span>
+        <div class="card-title"><h2>Kesimpulan QC</h2><p>Lulus bila semua test lulus</p></div>
+      </div>
+      <div class="fields">
+        <label>No. seri PCB<input type="text" id="serial" maxlength="40" placeholder="mis. PCB-v3.3-0001"></label>
+        <label>Operator<input type="text" id="operator" maxlength="40" placeholder="Nama operator"></label>
+      </div>
+      <div class="verdict running" id="verdict">
+        <div class="v-icon" id="vIcon">…</div>
+        <div>
+          <div class="v-title" id="vTitle">PENGUJIAN BERLANGSUNG</div>
+          <div class="v-sub" id="vSub">0 dari 5 test lulus</div>
+        </div>
+      </div>
+      <ul class="qc-list" id="qcList"></ul>
+      <div class="btn-row">
+        <button class="btn primary grow" id="saveReport">Simpan Laporan</button>
+        <button class="btn ghost grow" id="resetAll">&#8634; PCB Baru</button>
+      </div>
+      <div class="log-wrap">
+        <div class="log-h">Log kejadian</div>
+        <ul class="log" id="log"></ul>
+      </div>
+    </aside>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

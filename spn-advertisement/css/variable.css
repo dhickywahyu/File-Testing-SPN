@@ -1,0 +1,55 @@
+:root {
+  --primary: #ffc348;
+  --primary-transparent: #edb54770;
+  --secondary: #e8e8e8;
+  --info: #1c49ec;
+  --danger: #e52a34;
+  --warning: #ffc348;
+  --success: #31b057;
+  --dark: #333333;
+  --light: #ecf0f1;
+  --gray: #c2c2c2;
+  --dark-gray: #7f8fa6;
+}
+
+.text-\[20px\] {
+  font-size: 20px;
+}
+.text-\[24px\] {
+  font-size: 24px;
+}
+.text-\[30px\] {
+  font-size: 30px;
+}
+.text-\[50px\] {
+  font-size: 50px;
+}
+.text-\[58px\] {
+  font-size: 58px;
+}
+.text-\[60px\] {
+  font-size: 60px;
+}
+.text-\[96px\] {
+  font-size: 96px;
+}
+
+.loader {
+  width: 128px;
+  height: 128px;
+  border: 15px solid #ecf0f1;
+  border-bottom-color: var(--primary);
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

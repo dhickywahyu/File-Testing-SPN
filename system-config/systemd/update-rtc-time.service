@@ -1,0 +1,15 @@
+[Unit]
+Description=Run my Bash script periodically
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /etc/systemd/system/update-rtc-time.sh
+User=root
+Group=root
+Restart=always
+RestartSec=300  # Runs every 5 minutes
+ExecStartPre=/bin/sleep 23
+
+[Install]
+WantedBy=multi-user.target

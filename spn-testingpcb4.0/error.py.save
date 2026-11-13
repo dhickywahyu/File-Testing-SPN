@@ -1,0 +1,21 @@
+[INFO] Using 'smbus' (native)
+Traceback (most recent call last):
+  File "/home/pi/spn-testingpcb4.0/testingpcb4.py", line 789, in <module>
+    app = PCBTesterApp(root)
+  File "/home/pi/spn-testingpcb4.0/testingpcb4.py", line 316, in __init__
+    self.mcp_in1.config_all_input()
+  File "/home/pi/spn-testingpcb4.0/testingpcb4.py", line 124, in config_all_input
+    self._write(IODIRA, 0xFF)
+  File "/home/pi/spn-testingpcb4.0/testingpcb4.py", line 114, in _write
+    self.bus.write_byte_data(self.addr, reg, val)
+OSError: [Errno 121] Remote I/O error[INFO] Using 'smbus' (native)
+Traceback (most recent call last):
+  File "/home/pi/spn-testingpcb4.0/testingpcb4.py", line 789, in <module>
+    app = PCBTesterApp(root)
+  File "/home/pi/spn-testingpcb4.0/testingpcb4.py", line 316, in __init__
+    self.mcp_in1.config_all_input()
+  File "/home/pi/spn-testingpcb4.0/testingpcb4.py", line 124, in config_all_input
+    self._write(IODIRA, 0xFF)
+  File "/home/pi/spn-testingpcb4.0/testingpcb4.py", line 114, in _write
+    self.bus.write_byte_data(self.addr, reg, val)
+OSError: [Errno 121] Remote I/O error

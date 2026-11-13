@@ -1,0 +1,6 @@
+[Unit]
+Description=Simpan waktu NTP ke RTC DS3231
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/locker-rtc save

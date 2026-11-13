@@ -1,0 +1,296 @@
+2026-09-23 19:06:10,070 INFO    Program dimulai. Port /dev/serial0 @ 38400 bps, alamat ESP32 01
+2026-09-23 19:06:10,071 INFO    UI siap di http://127.0.0.1:8080 
+2026-09-23 19:06:10,087 INFO    Port /dev/serial0 dibuka, menghubungi ESP32…
+2026-09-23 19:06:10,691 ERROR   ESP32 tidak merespon. Cek kabel RS485 (A/B), catu daya ESP32, baudrate & alamat.
+2026-09-23 19:06:34,693 INFO    Program dihentikan
+2026-09-23 19:06:58,508 INFO    Program dimulai. Port /dev/serial0 @ 38400 bps, alamat ESP32 01
+2026-09-23 19:06:58,525 INFO    UI siap di http://127.0.0.1:8080 
+2026-09-23 19:06:58,681 INFO    Port /dev/serial0 dibuka, menghubungi ESP32…
+2026-09-23 19:06:59,288 ERROR   ESP32 tidak merespon. Cek kabel RS485 (A/B), catu daya ESP32, baudrate & alamat.
+2026-09-23 19:09:47,366 INFO    Program dihentikan
+2026-09-23 19:10:10,621 INFO    Program dimulai. Port /dev/serial0 @ 38400 bps, alamat ESP32 01
+2026-09-23 19:10:10,630 INFO    UI siap di http://127.0.0.1:8080 
+2026-09-23 19:10:10,765 INFO    Port /dev/serial0 dibuka, menghubungi ESP32…
+2026-09-23 19:10:11,372 ERROR   ESP32 tidak merespon. Cek kabel RS485 (A/B), catu daya ESP32, baudrate & alamat.
+2026-09-23 19:11:26,383 INFO    Program dimulai. Port /dev/serial0 @ 38400 bps, alamat ESP32 01
+2026-09-23 19:11:26,399 INFO    UI siap di http://127.0.0.1:8080 
+2026-09-23 19:11:26,499 INFO    Port /dev/serial0 dibuka, menghubungi ESP32…
+2026-09-23 19:11:26,520 INFO    ESP32 terhubung · FW 1.0.0 · reset terakhir: POWERON
+2026-09-23 19:11:26,544 INFO    Status awal diterima. Pintu terbuka: 05
+2026-09-23 19:16:55,395 INFO    Perintah BUKA cell 05 dikirim ke ESP32
+2026-09-23 19:16:55,410 INFO    Cell 05: solenoid AKTIF (1000 ms)
+2026-09-23 19:16:56,431 INFO    Cell 05: solenoid OFF
+2026-09-23 19:17:08,755 WARNING Cell 06: pintu TERBUKA tanpa perintah (dibuka paksa / cek sensor pintu) · LED ON
+2026-09-23 19:17:10,407 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:17:11,610 WARNING Cell 06: pintu TERBUKA tanpa perintah (dibuka paksa / cek sensor pintu) · LED ON
+2026-09-23 19:17:17,337 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:17:17,351 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:17:17,470 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:17:17,471 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:17:18,372 INFO    Cell 06: solenoid OFF
+2026-09-23 19:17:34,428 WARNING STOP: semua solenoid dimatikan & antrean ESP32 dikosongkan
+2026-09-23 19:18:09,586 INFO    Perintah BUKA cell 05 dikirim ke ESP32
+2026-09-23 19:18:09,600 INFO    Cell 05: solenoid AKTIF (1000 ms)
+2026-09-23 19:18:10,675 INFO    Cell 05: solenoid OFF
+2026-09-23 19:18:38,832 INFO    Perintah BUKA cell 05 dikirim ke ESP32
+2026-09-23 19:18:38,847 INFO    Cell 05: solenoid AKTIF (1000 ms)
+2026-09-23 19:18:39,973 INFO    Cell 05: solenoid OFF
+2026-09-23 19:19:22,317 INFO    Perintah BUKA cell 05 dikirim ke ESP32
+2026-09-23 19:19:22,332 INFO    Cell 05: solenoid AKTIF (1000 ms)
+2026-09-23 19:19:23,406 INFO    Cell 05: solenoid OFF
+2026-09-23 19:19:49,252 WARNING Cell 06: pintu TERBUKA tanpa perintah (dibuka paksa / cek sensor pintu) · LED ON
+2026-09-23 19:19:56,647 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:19:56,661 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:19:56,765 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:19:56,765 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:19:57,817 INFO    Cell 06: solenoid OFF
+2026-09-23 19:20:15,097 WARNING Cell 06: pintu TERBUKA tanpa perintah (dibuka paksa / cek sensor pintu) · LED ON
+2026-09-23 19:20:25,984 INFO    Perintah BUKA cell 05 dikirim ke ESP32
+2026-09-23 19:20:25,998 INFO    Cell 05: solenoid AKTIF (1000 ms)
+2026-09-23 19:20:27,120 INFO    Cell 05: solenoid OFF
+2026-09-23 19:20:37,500 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:20:37,517 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:20:37,639 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:20:37,639 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:20:38,541 INFO    Cell 06: solenoid OFF
+2026-09-23 19:20:47,256 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:20:58,827 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:20:58,842 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:20:58,978 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:20:58,980 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:20:59,879 INFO    Cell 06: solenoid OFF
+2026-09-23 19:21:03,937 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:23:01,066 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:23:01,080 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:23:01,303 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:23:01,304 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:23:02,209 INFO    Cell 06: solenoid OFF
+2026-09-23 19:23:06,805 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:23:06,819 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:23:07,918 INFO    Cell 06: solenoid OFF
+2026-09-23 19:23:11,976 ERROR   TEST cell 06 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:13,178 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:23:26,730 INFO    Hasil test direset
+2026-09-23 19:23:28,002 INFO    Hasil test direset
+2026-09-23 19:23:36,283 INFO    Buka semua cell berurutan (10 perintah)
+2026-09-23 19:23:36,297 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:23:36,310 INFO    Cell 02: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:36,324 INFO    Cell 03: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:36,339 INFO    Cell 04: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:36,353 INFO    Cell 05: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:36,369 INFO    Cell 06: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:36,384 INFO    Cell 07: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:36,399 INFO    Cell 08: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:36,414 INFO    Cell 09: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:36,428 INFO    Cell 10: masuk antrean (menunggu solenoid lain selesai)
+2026-09-23 19:23:37,353 INFO    Cell 01: solenoid OFF
+2026-09-23 19:23:37,353 INFO    Cell 02: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:38,405 INFO    Cell 02: solenoid OFF
+2026-09-23 19:23:38,406 INFO    Cell 03: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:39,306 INFO    Cell 03: solenoid OFF
+2026-09-23 19:23:39,307 INFO    Cell 04: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:40,359 INFO    Cell 04: solenoid OFF
+2026-09-23 19:23:40,360 INFO    Cell 05: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:41,411 ERROR   TEST cell 01 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:41,412 INFO    Cell 05: solenoid OFF
+2026-09-23 19:23:41,414 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:23:41,415 INFO    Cell 06: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:41,416 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:23:42,312 INFO    Cell 06: solenoid OFF
+2026-09-23 19:23:42,313 INFO    Cell 07: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:42,462 ERROR   TEST cell 02 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:43,363 ERROR   TEST cell 03 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:43,364 INFO    Cell 07: solenoid OFF
+2026-09-23 19:23:43,364 INFO    Cell 08: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:44,416 ERROR   TEST cell 04 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:44,417 INFO    Cell 08: solenoid OFF
+2026-09-23 19:23:44,418 INFO    Cell 09: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:45,319 INFO    Cell 09: solenoid OFF
+2026-09-23 19:23:45,321 INFO    Cell 10: solenoid AKTIF (giliran dari antrean)
+2026-09-23 19:23:46,370 INFO    Cell 10: solenoid OFF
+2026-09-23 19:23:47,421 ERROR   TEST cell 07 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:48,474 ERROR   TEST cell 08 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:49,375 ERROR   TEST cell 09 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:50,428 ERROR   TEST cell 10 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:23:57,940 WARNING Cell 06: pintu TERBUKA tanpa perintah (dibuka paksa / cek sensor pintu) · LED ON
+2026-09-23 19:26:32,902 INFO    Perintah BUKA cell 04 dikirim ke ESP32
+2026-09-23 19:26:32,917 INFO    Cell 04: solenoid AKTIF (1000 ms)
+2026-09-23 19:26:33,942 INFO    Cell 04: solenoid OFF
+2026-09-23 19:26:38,000 ERROR   TEST cell 04 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:26:43,574 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:26:43,588 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:26:43,710 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:26:43,711 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:26:44,612 INFO    Cell 06: solenoid OFF
+2026-09-23 19:26:51,975 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:26:52,881 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:26:52,897 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:26:53,027 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:26:53,027 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:26:53,928 INFO    Cell 06: solenoid OFF
+2026-09-23 19:26:55,732 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:34:01,710 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:34:01,725 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:34:01,945 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:34:01,948 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:34:02,846 INFO    Cell 06: solenoid OFF
+2026-09-23 19:34:07,573 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:34:07,587 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:34:08,706 INFO    Cell 06: solenoid OFF
+2026-09-23 19:34:12,764 ERROR   TEST cell 06 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:34:21,179 WARNING Cell 06: pintu TERBUKA tanpa perintah (dibuka paksa / cek sensor pintu) · LED ON
+2026-09-23 19:34:29,965 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:34:29,980 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:34:30,196 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:34:30,197 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:34:31,098 INFO    Cell 06: solenoid OFF
+2026-09-23 19:35:09,719 WARNING Cell 06: pintu TERBUKA tanpa perintah (dibuka paksa / cek sensor pintu) · LED ON
+2026-09-23 19:35:16,408 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:35:16,427 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:35:16,631 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:35:16,632 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:35:17,534 INFO    Cell 06: solenoid OFF
+2026-09-23 19:35:26,550 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:35:34,649 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:35:34,678 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:35:34,813 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:35:34,814 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:35:35,715 INFO    Cell 06: solenoid OFF
+2026-09-23 19:35:40,074 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:35:46,170 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:35:46,185 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:35:46,386 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:35:46,386 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:35:47,287 INFO    Cell 06: solenoid OFF
+2026-09-23 19:35:52,245 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:35:55,534 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:35:55,566 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:35:55,701 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:35:55,702 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:35:56,603 INFO    Cell 06: solenoid OFF
+2026-09-23 19:36:00,209 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:36:03,008 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:36:03,023 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:36:03,215 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:36:03,215 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:36:04,117 INFO    Cell 06: solenoid OFF
+2026-09-23 19:36:06,426 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:36:06,441 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:36:07,573 INFO    Cell 06: solenoid OFF
+2026-09-23 19:36:11,630 ERROR   TEST cell 06 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:36:15,838 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:36:24,734 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:36:24,750 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:36:24,856 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:36:24,857 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:36:25,908 INFO    Cell 06: solenoid OFF
+2026-09-23 19:36:34,474 INFO    Cell 06: pintu TERBUKA · LED ON
+2026-09-23 19:36:39,266 INFO    Perintah BUKA cell 06 dikirim ke ESP32
+2026-09-23 19:36:39,298 INFO    Cell 06: solenoid AKTIF (1000 ms)
+2026-09-23 19:36:39,434 INFO    Cell 06: pintu TERTUTUP · LED OFF
+2026-09-23 19:36:39,434 INFO    TEST cell 06 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:36:40,335 INFO    Cell 06: solenoid OFF
+2026-09-23 19:36:55,148 INFO    Perintah BUKA cell 05 dikirim ke ESP32
+2026-09-23 19:36:55,164 INFO    Cell 05: solenoid AKTIF (1000 ms)
+2026-09-23 19:36:56,264 INFO    Cell 05: solenoid OFF
+2026-09-23 19:37:23,469 INFO    Perintah BUKA cell 05 dikirim ke ESP32
+2026-09-23 19:37:23,484 INFO    Cell 05: solenoid AKTIF (1000 ms)
+2026-09-23 19:37:24,516 INFO    Cell 05: solenoid OFF
+2026-09-23 19:37:52,123 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:37:52,137 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:37:53,218 INFO    Cell 01: solenoid OFF
+2026-09-23 19:37:56,267 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:37:56,282 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:37:57,428 INFO    Cell 01: solenoid OFF
+2026-09-23 19:37:59,993 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:38:00,007 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:38:01,035 INFO    Cell 01: solenoid OFF
+2026-09-23 19:38:04,793 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:38:09,479 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:38:09,494 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:38:09,601 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:38:09,602 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:38:10,652 INFO    Cell 01: solenoid OFF
+2026-09-23 19:38:14,259 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:38:16,648 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:38:16,677 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:38:16,814 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:38:16,817 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:38:17,716 INFO    Cell 01: solenoid OFF
+2026-09-23 19:38:21,173 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:41:11,707 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:41:11,721 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:41:11,901 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:41:11,902 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:41:12,801 INFO    Cell 01: solenoid OFF
+2026-09-23 19:41:21,369 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:41:29,351 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:41:29,365 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:41:29,485 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:41:29,486 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:41:30,386 INFO    Cell 01: solenoid OFF
+2026-09-23 19:41:44,206 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:41:44,227 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:41:45,263 INFO    Cell 01: solenoid OFF
+2026-09-23 19:41:47,667 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:41:50,470 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:41:50,485 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:41:50,673 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:41:50,675 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:41:51,574 INFO    Cell 01: solenoid OFF
+2026-09-23 19:41:54,580 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:42:00,106 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:42:00,121 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:42:00,294 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:42:00,295 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:42:01,196 INFO    Cell 01: solenoid OFF
+2026-09-23 19:42:02,849 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:42:05,565 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:42:05,580 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:42:05,704 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:42:05,705 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:42:06,606 INFO    Cell 01: solenoid OFF
+2026-09-23 19:42:08,108 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:42:13,575 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:42:13,590 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:42:13,668 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:42:13,669 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:42:14,720 INFO    Cell 01: solenoid OFF
+2026-09-23 19:42:16,223 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:42:17,625 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:42:17,639 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:42:17,726 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:42:17,727 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:42:18,779 INFO    Cell 01: solenoid OFF
+2026-09-23 19:42:19,530 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:42:20,746 INFO    Perintah BUKA cell 02 dikirim ke ESP32
+2026-09-23 19:42:20,760 INFO    Cell 02: solenoid AKTIF (1000 ms)
+2026-09-23 19:42:21,785 INFO    Cell 02: solenoid OFF
+2026-09-23 19:42:23,355 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:42:23,372 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:42:23,589 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:42:23,590 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:42:24,491 INFO    Cell 01: solenoid OFF
+2026-09-23 19:42:25,843 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:42:25,844 ERROR   TEST cell 02 GAGAL: Pintu tidak terbuka setelah solenoid aktif (cek solenoid, mekanik pintu, atau sensor pintu)
+2026-09-23 19:42:30,335 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:42:30,365 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:42:31,404 INFO    Cell 01: solenoid OFF
+2026-09-23 19:42:57,592 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:42:57,606 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:42:57,700 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:42:57,701 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:42:58,752 INFO    Cell 01: solenoid OFF
+2026-09-23 19:43:01,607 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:43:06,993 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:43:07,007 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:43:07,182 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:43:07,186 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:43:08,083 INFO    Cell 01: solenoid OFF
+2026-09-23 19:43:15,447 INFO    Cell 01: pintu TERBUKA · LED ON
+2026-09-23 19:43:17,539 INFO    Perintah BUKA cell 01 dikirim ke ESP32
+2026-09-23 19:43:17,566 INFO    Cell 01: solenoid AKTIF (1000 ms)
+2026-09-23 19:43:17,700 INFO    Cell 01: pintu TERTUTUP · LED OFF
+2026-09-23 19:43:17,700 INFO    TEST cell 01 LULUS: solenoid, sensor pintu & LED berfungsi
+2026-09-23 19:43:18,602 INFO    Cell 01: solenoid OFF
+2026-09-23 19:49:32,952 WARNING Cell 01: pintu TERBUKA tanpa perintah (dibuka paksa / cek sensor pintu) · LED ON

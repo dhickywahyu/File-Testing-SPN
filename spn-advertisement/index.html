@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script defer src="js/require.js"></script>
+    <script
+      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"
+      type="module"
+    ></script>
+    <link rel="stylesheet" type="" href="css/variable.css" />
+    <link
+      rel="stylesheet"
+      type=""
+      href="css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      type=""
+      href="css/tailwind.css"
+    />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+
+    <link
+      rel="preload"
+      href="font/PlusJakartaSans-VariableFont_wght.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Soul Parking Gate</title>
+    <style>
+      @font-face {
+        font-family: "JakartaFont";
+        src: url("font/PlusJakartaSans-VariableFont_wght.ttf")
+          format("truetype");
+      }
+      * {
+        font-family: "JakartaFont" !important;
+        font-optical-sizing: auto;
+        font-style: normal;
+      }
+      video#bg-video {
+        position: absolute;
+        left: 0;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* keep video behind everything */
+      }
+      .rounded-t-50 {
+        border-radius: 50px 50px 0 0 !important;
+      }
+
+      .rounded-50 {
+        border-radius: 50px !important;
+      }
+
+      .rounded-b-50 {
+        border-radius: 0 0 50px 50px !important;
+      }
+
+      .rounded-r-50 {
+        border-radius: 0 50px 50px 0 !important;
+      }
+
+      .rounded-l-50 {
+        border-radius: 50px 0 0 50px !important;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+      }
+
+      .animate-slide-up {
+        animation: slideUp 0.3s ease forwards;
+      }
+
+      .animate-slide-down {
+        animation: slideDown 0.2s ease forwards;
+      }
+
+      @keyframes islandExpand {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes islandShrink {
+        from {
+          transform: scale(1);
+          opacity: 1;
+        }
+        to {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+      }
+
+      .animate-expand {
+        animation: islandExpand 0.3s ease-out forwards;
+      }
+
+      .animate-shrink {
+        animation: islandShrink 0.3s ease-in forwards;
+      }
+    </style>
+  </head>
+  <body class="h-screen overflow-hidden bg-indigo-50 relative">
+    <div
+      id="overlayDynamicIsland"
+      class="fixed inset-0 bg-black bg-opacity-90 z-10 pointer-events-none hidden ease-in-out duration-75 transition"
+    ></div>
+
+    <!-- DYNAMIC ISLAND -->
+    <div class="fixed w-full top-16 z-10 justify-center">
+      <!-- IDLE DYNAMIC -->
+      <div class="flex" id="smallDynamicIsland">
+        <div
+          id="smallDynamicIsland__content"
+          class="bg-gray-800 bg-opacity-95 text-white px-10 py-6 rounded-full shadow-2xl flex justify-center text-2xl font-bold tracking-wide mx-auto"
+        >
+          <div class="flex space-x-3 align-middle">
+            <div class="mt-1">
+              <span class="relative flex h-6 w-6">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-6 w-6 bg-red-500"
+                ></span>
+              </span>
+            </div>
+            <div class="">Menghubungkan ulang...</div>
+          </div>
+        </div>
+      </div>
+      <!--  END OF IDLE DYNAMIC -->
+
+      <!-- LARGE DYNAMIC -->
+      <div class="hidden" id="largeDynamicIsland">
+        <div
+          class="bg-gray-800 mx-auto bg-opacity-95 text-white px-10 pt-3.5 rounded-full shadow-2xl flex justify-center text-2xl font-bold tracking-wide"
+        >
+          <div class="flex space-x-3 align-middle">
+            <div class="flex items-center space-x-6">
+              <div class="pb-2.5">
+                <svg
+                  class="animate-spin h-14 w-14 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                class="pt-1.5 pb-5 text-white text-2xl font-semibold leading-tight"
+                id="largeDynamicIsland__content"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END OF LARGE DYNAMIC -->
+
+      <!-- EXTRA LARGE DYNAMIC -->
+      <div class="hidden px-10 w-full z-50" id="extraLargeDynamicIsland">
+        <div
+          class="bg-gray-800 bg-opacity-95 z-50 text-white px-10 py-10 rounded-3xl shadow-2xl flex justify-center tracking-wide mx-auto"
+        >
+          <div class="w-full">
+            <div class="flex space-x-3 align-middle justify-between">
+              <div
+                class="hidden"
+                id="extraLargeDynamicIsland__GENERAL_ERROR__icon"
+              >
+                <dotlottie-wc
+                  src="https://lottie.host/1e6c362b-160a-43c6-81ca-ee2a0e0de0b5/tQwb58czkt.lottie"
+                  speed="1"
+                  autoplay
+                  loop
+                  class="-mt-14 -ml-28"
+                ></dotlottie-wc>
+              </div>
+              <div
+                class="hidden"
+                id="extraLargeDynamicIsland__MEMBER_ERROR__icon"
+              >
+                <dotlottie-wc
+                  src="https://lottie.host/1e6c362b-160a-43c6-81ca-ee2a0e0de0b5/tQwb58czkt.lottie"
+                  speed="1"
+                  autoplay
+                  loop
+                  class="-mt-14 -ml-28"
+                ></dotlottie-wc>
+              </div>
+              <div class="mt-1" id="extraLargeDynamicIsland__badge">
+                <span
+                  class="bg-gray-300 rounded-xl font-black text-lg px-5 py-3 text-black"
+                >
+                  RFID: 1842183192
+                </span>
+              </div>
+            </div>
+            <div class="-mt-8">
+              <p class="font-bold text-4xl" id="extraLargeDynamicIsland__title">
+                Membership Kedaluarsa
+              </p>
+              <p class="mt-3 text-xl" id="extraLargeDynamicIsland__content">
+                Kartu membership yang anda gunakan sudah kedaluarsa, silahkan
+                perpanjang membership anda
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF EXTRA LARGE DYNAMIC  -->
+
+    <!-- END OF DYNAMIC ISLAND -->
+
+    <!-- GATE_OPEN -->
+    <div class="relative h-full w-full px-8 py-12 hidden" id="OpenGateInEvent">
+      <div class="py-20 px-10 h-full">
+        <div class="flex flex-col h-full">
+          <div id="captionGateInOpen"></div>
+
+          <div class="flex space-x-5 mt-5">
+            <div class="text-center">
+              <img src="img/tenant-1.png" alt="" class="w-14" />
+              <p class="-mt-1 font-bold">Restroom</p>
+            </div>
+
+            <div class="text-center">
+              <img src="img/tenant-6.png" alt="" class="w-14" />
+              <p class="-mt-1 font-bold">Locker</p>
+            </div>
+
+            <div class="text-center">
+              <img src="img/tenant-2.png" alt="" class="w-14" />
+              <p class="-mt-1 font-bold">Mushola</p>
+            </div>
+
+            <div class="text-center">
+              <img src="img/tenant-5.png" alt="" class="w-14" />
+              <p class="-mt-1 font-bold">Shower</p>
+            </div>
+
+            <div class="text-center">
+              <img src="img/tenant-4.png" alt="" class="w-14" />
+              <p class="-mt-1 font-bold">Lounge</p>
+            </div>
+
+            <div class="text-center">
+              <img src="img/tenant-3.png" alt="" class="w-14" />
+              <p class="-mt-1 font-bold">Smoking</p>
+              <p class="-mt-1 font-bold">Room</p>
+            </div>
+          </div>
+
+          <div class="rounded-xl overflow-hidden mt-3 h-3/5 bg-gray-300">
+            <img src="" alt="" id="smallAdvertisingGateIn" />
+          </div>
+
+          <div
+            class="flex-grow h-full rounded-xl overflow-hidden mt-5 bg-gray-300"
+          >
+            <img id="largeAdvertisingGateIn" src="" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF GATE_OPEN -->
+
+    <!-- IDLE -->
+    <div id="idleEvent" class="">
+      <video
+        id="bg-video"
+        autoplay
+        muted
+        loop
+        playsinline
+        class="absolute left-0 w-full h-full object-cover -z-10"
+      >
+        <source src="videos/sample.mp4" type="video/mp4" />
+        Your browser does not support HTML5 video.
+      </video>
+    </div>
+
+    <div class="h-screen z-0 hidden" id="parkingInformation">
+      <div class="absolute bottom-0 left-0 w-full">
+        <div class="bg-black z-0 rounded-50 text-white p-16">
+          <div class="flex justify-between">
+            <div class="">
+              <p class="text-2xl font-semibold tracking-wide">
+                Tarif <span id="vehicleType__IDLE"></span>
+              </p>
+              <p class="text-5xl mt-4 font-black" id="startPrice__IDLE">
+                Rp5.000
+              </p>
+              <p class="text-xl font-semibold mt-2 tracking-wide">
+                <span id="startHour__IDLE"></span> Jam Pertama
+              </p>
+            </div>
+            <div class="" id="motorcycle__IDLE">
+              <img src="./img/motorcycle.png" alt="" class="w-96 -mt-60" />
+            </div>
+
+            <div class="" id="car__IDLE">
+              <img src="./img/car.png" alt="" class="w-96 -mt-24" />
+            </div>
+          </div>
+        </div>
+        <div class="bg-white z-0 rounded-t-50 pt-5 pb-14 px-16 -mt-20">
+          <div class="flex space-x-8 mt-5">
+            <div
+              class=""
+              onclick="expandIsland('idleDynamicIsland', 'loadingDynamicIsland')"
+            >
+              <p class="text-3xl font-black" id="nextPrice__IDLE">Rp2.000</p>
+              <p class="text-gray-600 text-xl">
+                <span id="nextHour__IDLE"></span> Jam Berikutnya
+              </p>
+            </div>
+
+            <div class="" id="limitedProgressive__IDLE">
+              <p class="text-3xl font-black" id="maxPrice__IDLE">Rp25.000</p>
+              <p class="text-gray-600 text-xl">
+                Maksimal (<span id="maxHour__IDLE"></span> Jam)
+              </p>
+            </div>
+          </div>
+          <div class="">
+            <p class="font-bold text-2xl mt-16">Fasilitas</p>
+            <div class="h-1 bg-black rounded-full my-2 w-20"></div>
+            <div class="flex space-x-5">
+              <div class="text-center">
+                <img src="./img/tenant-1.png" alt="" class="w-20" />
+                <p class="-mt-1 text-lg font-bold">Restroom</p>
+              </div>
+
+              <div class="text-center">
+                <img src="./img/tenant-6.png" alt="" class="w-20" />
+                <p class="-mt-1 text-lg font-bold">Locker</p>
+              </div>
+
+              <div class="text-center">
+                <img src="./img/tenant-2.png" alt="" class="w-20" />
+                <p class="-mt-1 text-lg font-bold">Mushola</p>
+              </div>
+
+              <div class="text-center">
+                <img src="./img/tenant-5.png" alt="" class="w-20" />
+                <p class="-mt-1 text-lg font-bold">Shower</p>
+              </div>
+
+              <div class="text-center">
+                <img src="./img/tenant-4.png" alt="" class="w-20" />
+                <p class="-mt-1 text-lg font-bold">Lounge</p>
+              </div>
+
+              <div class="text-center">
+                <img src="./img/tenant-3.png" alt="" class="w-20" />
+                <p class="-mt-1 text-lg font-bold">Smoking</p>
+                <p class="-mt-1 text-lg font-bold">Room</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="">
+            <p class="font-bold text-2xl mt-8">Ketentuan Umum</p>
+            <div class="h-1 bg-black rounded-full my-2 w-20"></div>
+            <div class="flex flex-col mt-5 space-y-3 text-lg">
+              <div class="flex space-x-2">
+                <div class="text-3xl -mt-2">&#9737;</div>
+                <div class="text-xl">
+                  Tarif parkir tercantum pada rambu tarif.
+                </div>
+              </div>
+
+              <div class="flex space-x-2">
+                <div class="text-3xl -mt-2">&#9737;</div>
+                <div class="text-xl">
+                  Jangan tinggalkan barang berharga di dalam kendaraan anda.
+                </div>
+              </div>
+
+              <div class="flex space-x-2">
+                <div class="text-3xl -mt-2">&#9737;</div>
+                <div class="text-xl">
+                  Apabila karcis tanda parkir hilang, petugas berwewenang
+                  memeriksa STNK atau surat keterangan lainnya serta dikenakan
+                  biaya administrasi sebesar Rp15.000 untuk motor dan Rp 30.000
+                  untuk mobil.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF IDLE -->
+
+    <!-- MEMBERSHIP_SUCCESS_OUT -->
+    <div
+      class="py-11 px-5 flex flex-col h-screen hidden"
+      id="MemberGateOutEvent"
+    >
+      <div>
+        <img
+          src="https://spn-gate.s3-ap-southeast-1.amazonaws.com/captured/testing/20200421/2020-04-21-120533.jpg"
+          alt=""
+          id="imageOutMember"
+          class="relative rounded z-0"
+        />
+      </div>
+
+      <div
+        class="relative w-full mx-auto bg-indigo-50 pt-8 px-20 -mt-36 z-10 flex-grow rounded-t-50"
+      >
+        <div class="flex flex-wrap items-center z-50 relative">
+          <div class="mx-auto -mt-28">
+            <script
+              src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"
+              type="module"
+            ></script>
+            <dotlottie-wc
+              src="https://lottie.host/97f44191-a241-4f65-9c60-d8999135fb29/EdLbyvumPd.lottie"
+              style="width: 400px; height: 400px"
+              speed="1"
+              autoplay
+              loop
+            ></dotlottie-wc>
+          </div>
+          <div class="w-full">
+            <p class="font-bold mx-auto text-center -mt-28">
+              <span class="text-gray-700 block text-3xl"
+                >Pembayaran Membership Gratis
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="bg-gray-700 rounded-xl shadow pt-10 pb-10 pl-10 pr-5 -mt-15 relative"
+        >
+          <div class="flex justify-between">
+            <div class="text-white">
+              <p class="font-semibold text-lg">Sisa Hari</p>
+              <p class="font-semibold text-4xl mt-2">17 Hari</p>
+            </div>
+            <div class="">
+              <div class="text-white mt-10 font-bold pr-5 text-lg">
+                Republic Padel
+              </div>
+            </div>
+          </div>
+          <div class="justify-between flex">
+            <div class="text-white mt-10">4122341110</div>
+          </div>
+        </div>
+
+        <div class="rounded-xl overflow-hidden mt-3 bg-gray-300">
+          <img
+            src="img/sample-ads-1.png"
+            alt=""
+            id="smallAdvertisingGateOutMember"
+          />
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-10 mt-5">
+          <div class="flex justify-between align-middle">
+            <div class="text-black flex flex-col justify-center flex-grow">
+              <p class="text-lg">Bantu kami lebih baik dengan,</p>
+              <p class="font-black -mt-1 text-3xl">Scan untuk Review!</p>
+            </div>
+            <div class="text-white flex flex-col justify-center">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/QR_Code_Example.svg/368px-QR_Code_Example.svg.png"
+                class="w-24"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF MEMBERSHIP_SUCCESS_OUT -->
+
+    <!-- EMONEY_SUCCESS -->
+    <div
+      class="py-11 px-5 flex flex-col h-screen hidden"
+      id="EmoneySuccessGateOutEvent"
+    >
+      <div>
+        <img
+          src="https://spn-gate.s3-ap-southeast-1.amazonaws.com/captured/testing/20200421/2020-04-21-120533.jpg"
+          alt=""
+          id="parkingImage__EMONEY_SUCCESS"
+          class="relative rounded z-0"
+        />
+      </div>
+
+      <div
+        class="relative w-full mx-auto bg-indigo-50 pt-8 px-20 -mt-36 z-10 flex-grow rounded-t-50"
+      >
+        <div class="flex flex-wrap items-center z-50 relative">
+          <div class="mx-auto -ml-12 -mt-28">
+            <script
+              src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"
+              type="module"
+            ></script>
+            <dotlottie-wc
+              src="https://lottie.host/0220f975-1307-4f75-95dc-b2e17babbe80/gYBw4Xwzmn.lottie"
+              style="width: 800px; height: 400px"
+              speed="1"
+              autoplay
+              loop
+            ></dotlottie-wc>
+          </div>
+          <div class="w-full">
+            <p class="font-bold mx-auto text-center -mt-28">
+              <span class="text-gray-400 block text-xl"
+                >Pembayaran Berhasil</span
+              >
+              <span
+                class="block font-bold mt-2 text-5xl"
+                id="amount__EMONEY_SUCCESS"
+                >Rp40.000,-</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="bg-gray-700 rounded-xl shadow pt-10 pb-10 pl-10 pr-5 mt-5 relative"
+        >
+          <div class="flex justify-between">
+            <div class="text-white">
+              <p class="font-semibold text-lg">Sisa Saldo</p>
+              <p
+                class="font-semibold text-4xl mt-2"
+                id="balanceLeft__EMONEY_SUCCESS"
+              >
+                Rp 143.231,-
+              </p>
+            </div>
+            <div class="">
+              <div
+                class="text-white mt-10 font-bold pr-5 text-lg"
+                id="cardBank__EMONEY_SUCCESS"
+              >
+                Bank BCA
+              </div>
+            </div>
+          </div>
+          <div class="justify-between flex">
+            <div class="text-white mt-10" id="cardNumber__EMONEY_SUCCESS">
+              XXXX-XXXX-XXXX
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white rounded-xl p-10 relative overflow-hidden z-10 mt-5"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="font-bold text-4xl">
+                <span id="parkingSpotName__EMONEY_SUCCESS"
+                  >!!Republic Padel</span
+                >
+                <div
+                  class="text-sm text-gray-400 font-normal"
+                  id="parkingSpotAddress__EMONEY_SUCCESS"
+                >
+                  !!Jl. Panjang No.8, Kec. Kb. Jeruk, Kota Jakarta Barat
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div
+                class="text-2xl font-semibold text-gray-300"
+                id="searchKey__EMONEY_SUCCESS"
+              >
+                42A2B2
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-gray-400 mb-4 mt-6"></div>
+
+          <div class="py-5">
+            <div class="flex justify-between pr-10">
+              <div class="space-y-5">
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Waktu Masuk
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="timeIn__EMONEY_SUCCESS"
+                  >
+                    21 Januari 2024 14:02
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Durasi Parkir
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="duration__EMONEY_SUCCESS"
+                  >
+                    !!2 Jam 43 Menit
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-5">
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Waktu Keluar
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="timeOut__EMONEY_SUCCESS"
+                  >
+                    21 Januari 2024 16:22
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Plat Nomor
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="licensePlate__EMONEY_SUCCESS"
+                  >
+                    B8888ZZH
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="absolute -left-3 top-28 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+          <div
+            class="absolute -right-3 top-28 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-10 mt-5">
+          <div class="flex justify-between align-middle">
+            <div class="text-black flex flex-col justify-center flex-grow">
+              <p class="text-lg">Bantu kami lebih baik dengan,</p>
+              <p class="font-black -mt-1 text-3xl">Scan untuk Review!</p>
+            </div>
+            <div class="text-white flex flex-col justify-center">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/QR_Code_Example.svg/368px-QR_Code_Example.svg.png"
+                class="w-24"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF EMONEY_SUCCESS -->
+
+    <!-- QRIS_SUCCESS -->
+    <div
+      class="py-11 px-5 flex flex-col h-screen hidden"
+      id="QRISuccessGateOutEvent"
+    >
+      <div>
+        <img
+          src="https://spn-gate.s3-ap-southeast-1.amazonaws.com/captured/testing/20200421/2020-04-21-120533.jpg"
+          alt=""
+          id="parkingImage__QRIS_SUCCESS"
+          class="relative rounded z-0"
+        />
+      </div>
+
+      <div
+        class="relative w-full mx-auto bg-indigo-50 pt-8 px-20 -mt-36 z-10 flex-grow rounded-t-50"
+      >
+        <div class="flex flex-wrap items-center z-50 relative">
+          <div class="mx-auto -ml-12 -mt-28">
+            <script
+              src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"
+              type="module"
+            ></script>
+            <dotlottie-wc
+              src="https://lottie.host/0220f975-1307-4f75-95dc-b2e17babbe80/gYBw4Xwzmn.lottie"
+              style="width: 800px; height: 400px"
+              speed="1"
+              autoplay
+              loop
+            ></dotlottie-wc>
+          </div>
+          <div class="w-full">
+            <p class="font-bold mx-auto text-center -mt-28">
+              <span class="text-gray-400 block text-xl"
+                >Pembayaran Berhasil</span
+              >
+              <span
+                class="block font-bold mt-2 text-5xl"
+                id="amount__QRIS_SUCCESS"
+                >Rp40.000,-</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="bg-white rounded-xl p-10 relative overflow-hidden z-10 mt-5"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="font-bold text-4xl">
+                <span id="parkingSpotName__QRIS_SUCCESS">!!Republic Padel</span>
+                <div
+                  class="text-sm text-gray-400 font-normal"
+                  id="parkingSpotAddress__QRIS_SUCCESS"
+                >
+                  !!Jl. Panjang No.8, Kec. Kb. Jeruk, Kota Jakarta Barat
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div
+                class="text-2xl font-semibold text-gray-300"
+                id="searchKey__QRIS_SUCCESS"
+              >
+                42A2B2
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-gray-400 mb-4 mt-6"></div>
+
+          <div class="py-5">
+            <div class="flex justify-between pr-10">
+              <div class="space-y-5">
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Waktu Masuk
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="timeIn__QRIS_SUCCESS"
+                  >
+                    21 Januari 2024 14:02
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Durasi Parkir
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="duration__QRIS_SUCCESS"
+                  >
+                    !!2 Jam 43 Menit
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-5">
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Waktu Keluar
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="timeOut__QRIS_SUCCESS"
+                  >
+                    21 Januari 2024 16:22
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Plat Nomor
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="licensePlate__QRIS_SUCCESS"
+                  >
+                    B8888ZZH
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="absolute -left-3 top-28 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+          <div
+            class="absolute -right-3 top-28 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+        </div>
+
+        <div class="rounded-xl overflow-hidden mt-3">
+          <img src="" alt="" id="smallAdvertisingGateOutQRIS" />
+        </div>
+      </div>
+    </div>
+    <!-- END OF QRIS_SUCCESS -->
+
+    <!-- EMONEY PROCESS -->
+    <div
+      class="py-11 px-5 flex flex-col h-screen hidden"
+      id="EmoneyProcessGateOutEvent"
+    >
+      <div>
+        <img
+          src="https://spn-gate.s3-ap-southeast-1.amazonaws.com/captured/testing/20200421/2020-04-21-120533.jpg"
+          alt=""
+          id="parkingImage__EMONEY_PROCESS"
+          class="relative rounded z-0"
+        />
+      </div>
+
+      <div
+        class="relative w-full mx-auto bg-indigo-50 pt-8 pb-12 px-20 -mt-24 z-10 flex-grow rounded-t-50"
+      >
+        <div class="flex items-center mb-6 z-50 relative">
+          <div class="mx-auto font-bold text-center my-3">
+            <p class="font-bold text-2xl text-center">Waktu Pembayaran</p>
+            <p id="timer__EMONEY_PROCESS" class="text-9xl text-gray-800">60</p>
+            <div class="absolute top-5 right-32">
+              <dotlottie-wc
+                src="img/counter.lottie"
+                style="width: 240px; height: 120px"
+                speed="1"
+                autoplay
+                loop
+                mode="normal"
+                backround="transaparent"
+              ></dotlottie-wc>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-10 relative overflow-hidden z-10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="font-bold text-4xl">
+                <span id="parkingSpotName__EMONEY_PROCESS"
+                  >!!Republic Padel</span
+                >
+                <div
+                  class="text-sm text-gray-400 font-normal"
+                  id="parkingSpotAddress__EMONEY_PROCESS"
+                >
+                  !!Jl. Panjang No.8, Kec. Kb. Jeruk, Kota Jakarta Barat
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div
+                class="text-2xl font-semibold text-gray-300"
+                id="searchKey__EMONEY_PROCESS"
+              >
+                42A2B2
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-gray-400 mb-4 mt-6"></div>
+
+          <div class="py-5">
+            <div class="flex justify-between pr-10">
+              <div class="space-y-5">
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Waktu Masuk
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="timeIn__EMONEY_PROCESS"
+                  >
+                    21 Januari 2024 14:02
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Durasi Parkir
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="duration__EMONEY_PROCESS"
+                  >
+                    !!2 Jam 43 Menit
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-5">
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Waktu Keluar
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="timeOut__EMONEY_PROCESS"
+                  >
+                    21 Januari 2024 16:22
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Plat Nomor
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="licensePlate__EMONEY_PROCESS"
+                  >
+                    B8888ZZH
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-gray-800 my-5"></div>
+
+          <div class="flex justify-between">
+            <div class="text-gray-400 font-semibold text-2xl mt-2">
+              Total Pembayaran (Rp)
+            </div>
+            <div class="font-bold text-5xl" id="amount__EMONEY_PROCESS">
+              40.000,-
+            </div>
+          </div>
+
+          <div
+            class="absolute -left-3 top-28 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+          <div
+            class="absolute -right-3 top-28 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+          <div
+            class="absolute -left-3 bottom-24 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+          <div
+            class="absolute -right-3 bottom-24 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+        </div>
+
+        <div class="bg-gray-700 left- rounded-xl shadow pl-10 pr-5 mt-5">
+          <div class="flex justify-between align-middle">
+            <div class="text-white flex flex-col justify-center py-8">
+              <p class="text-lg">Bayar Lebih Cepat, Tanpa Ribet dengan QRIS.</p>
+              <p class="font-black text-3xl">
+                Tekan Tombol pada mesin untuk bayar dengan QRIS!
+              </p>
+            </div>
+            <div class="w-1/3">
+              <dotlottie-wc
+                src="https://lottie.host/9a3c6786-f1d6-42f2-b405-8f63eb5d04fb/K2L2xICWOc.lottie"
+                style="width: 384px; height: 192px"
+                class="absolute -mt-4 ml-28 left-96"
+                speed="1"
+                autoplay
+                loop
+                mode="cover"
+                backround="transaparent"
+              ></dotlottie-wc>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex w-full mb-8">
+          <div class="bg-white rounded-xl shadow w-full mt-5">
+            <div class="flex flex-grow space align-middle">
+              <div class="mt-3 w-1/6">
+                <dotlottie-wc
+                  src="https://lottie.host/d6f76d72-d5db-477c-9387-9f15e107b6a6/WT6rxO9iKe.lottie"
+                  style="width: 192px; height: 96px"
+                  speed="1"
+                  class="-ml-7"
+                  autoplay
+                  loop
+                  mode="normal"
+                  backround="transaparent"
+                ></dotlottie-wc>
+              </div>
+              <div class="flex flex-col justify-center">
+                <span class="relative flex h-3 w-3">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"
+                  ></span>
+                  <span
+                    class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"
+                  ></span>
+                </span>
+              </div>
+              <div class="text-black flex flex-col ml-3 justify-center">
+                <span class="text-xl font-black">
+                  Mohon Tempelkan Kartu Elektronik Pembayaran Anda
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF EMONEY PROCESS -->
+
+    <!-- QRIS PROCESS & QRIS CREATED -->
+    <div class="py-11 px-5 flex flex-col h-screen hidden" id="QRISGateOutEvent">
+      <div>
+        <img
+          src="https://spn-gate.s3-ap-southeast-1.amazonaws.com/captured/testing/20200421/2020-04-21-120533.jpg"
+          alt=""
+          id="parkingImage__QRIS"
+          class="relative rounded z-0"
+        />
+      </div>
+
+      <div
+        class="relative w-full mx-auto bg-indigo-50 pt-8 pb-12 px-20 -mt-24 z-10 flex-grow rounded-t-50"
+      >
+        <div class="flex items-center mb-6 z-50 relative">
+          <div class="mx-auto font-bold text-center my-3">
+            <div class="hidden py-32" id="loader__QRIS">
+              <svg
+                class="animate-spin h-24 w-24 text-black text-center my-3 mx-auto"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+              <p class="text-3xl text-gray-400">Menyiapkan QRIS</p>
+            </div>
+            <div class="hidden py-3" id="image__QRIS">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/QR_Code_Example.svg/368px-QR_Code_Example.svg.png"
+                class="w-96"
+                alt=""
+                id="qr__QRIS"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-10 relative overflow-hidden z-10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="font-bold text-4xl">
+                <span id="parkingSpotName__QRIS">!!Republic Padel</span>
+                <div
+                  class="text-sm text-gray-400 font-normal"
+                  id="parkingSpotAddress__QRIS"
+                >
+                  !!Jl. Panjang No.8, Kec. Kb. Jeruk, Kota Jakarta Barat
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div
+                class="text-2xl font-semibold text-gray-300"
+                id="searchKey__QRIS"
+              >
+                42A2B2
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-gray-400 mb-4 mt-6"></div>
+
+          <div class="py-5">
+            <div class="flex justify-between pr-10">
+              <div class="space-y-5">
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Waktu Masuk
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="timeIn__QRIS"
+                  >
+                    21 Januari 2024 14:02
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Durasi Parkir
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="duration__QRIS"
+                  >
+                    !!2 Jam 43 Menit
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-5">
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Waktu Keluar
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="timeOut__QRIS"
+                  >
+                    21 Januari 2024 16:22
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <div class="font-semibold text-lg text-gray-400">
+                    Plat Nomor
+                  </div>
+                  <div
+                    class="font-semibold text-xl text-gray-800"
+                    id="licensePlate__QRIS"
+                  >
+                    B8888ZZH
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-gray-800 my-5"></div>
+
+          <div class="flex justify-between">
+            <div class="text-gray-400 font-semibold text-2xl mt-2">
+              Total Pembayaran (Rp)
+            </div>
+            <div class="font-bold text-5xl" id="amount__QRIS">40.000,-</div>
+          </div>
+
+          <div
+            class="absolute -left-3 top-28 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+          <div
+            class="absolute -right-3 top-28 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+          <div
+            class="absolute -left-3 bottom-24 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+          <div
+            class="absolute -right-3 bottom-24 w-6 h-6 bg-indigo-50 rounded-full"
+          ></div>
+        </div>
+
+        <div class="flex w-full mb-8">
+          <div class="bg-white rounded-xl shadow w-full mt-5">
+            <div class="flex flex-grow space align-middle">
+              <div class="mt-3 w-1/6">
+                <dotlottie-wc
+                  src="https://lottie.host/b6035507-1f96-45b8-b527-5941490a170c/y1iKoznDyp.lottie"
+                  style="width: 192px; height: 96px"
+                  speed="1"
+                  class="-ml-7"
+                  autoplay
+                  loop
+                  mode="normal"
+                  backround="transaparent"
+                ></dotlottie-wc>
+              </div>
+              <div class="flex flex-col justify-center">
+                <span class="relative flex h-3 w-3">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"
+                  ></span>
+                  <span
+                    class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"
+                  ></span>
+                </span>
+              </div>
+              <div class="text-black flex flex-col ml-3 justify-center">
+                <span class="text-xl font-black">
+                  Scan QRIS Pembayaran pada Bagian Atas Layar.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF QRIS PROCESS & QRIS CREATED -->
+  </body>
+
+  <script async src="js/main.js"></script>
+  <script async src="js/GateOpenEvent.js"></script>
+  <script async src="js/TransactionEvent.js"></script>
+  <script async src="js/DynamicIsland.js"></script>
+  <script async>
+    let lastEvent = {};
+    var ws;
+    let data = {};
+    const condition = ["disconnected", "connected"];
+    let hideMembershipLeft = 0;
+    const val = (obj, key, fallback = "") =>
+      obj && obj[key] != null
+        ? obj[key]
+        : window && window[key] != null
+        ? window[key]
+        : fallback;
+
+    setTimeout(() => {
+      require(["js/env"], function (envMod) {
+        data = {
+          LOCATION_NAME: val(envMod, "LOCATION_NAME", ""),
+          LOCATION_TYPE: val(envMod, "LOCATION_TYPE", ""),
+          LOCATION_ADDRESS: val(envMod, "LOCATION_ADDRESS", ""),
+          HIDE_MEMBERSHIP_LEFT: val(envMod, "HIDE_MEMBERSHIP_LEFT", "0"),
+        };
+
+        hideMembershipLeft = Number(data.HIDE_MEMBERSHIP_LEFT) || 0;
+        connect();
+      }, function (err) {
+        console.error("env load failed", err);
+        data = {
+          LOCATION_NAME: val(null, "LOCATION_NAME", ""),
+          LOCATION_TYPE: val(null, "LOCATION_TYPE", ""),
+          LOCATION_ADDRESS: val(null, "LOCATION_ADDRESS", ""),
+          HIDE_MEMBERSHIP_LEFT: val(null, "HIDE_MEMBERSHIP_LEFT", "0"),
+        };
+        hideMembershipLeft = Number(data.HIDE_MEMBERSHIP_LEFT) || 0;
+        window.reload(true);
+      });
+    }, 1500);
+
+    function connect() {
+      ws = new WebSocket("ws://localhost:8004/ws");
+      ws.onopen = function () {
+        resetIsland("smallDynamicIsland");
+        setSmallDynamicIsland({ color: "green", text: LOCATION_NAME ?? "" });
+        document.getElementById("idleEvent").classList.remove("hidden");
+        document
+          .getElementById("idleEvent")
+          .classList.remove("animate-slide-down");
+        document
+          .getElementById("idleEvent")
+          .classList.remove("animate-slide-up");
+        document.getElementById("idleEvent").style.display = "block";
+      };
+      ws.onmessage = onMessageWS;
+      ws.onclose = function (e) {
+        setSmallDynamicIsland({
+          color: "red",
+          text: "Menghubungkan Ulang...",
+        });
+        setTimeout(function () {
+          connect();
+        }, 5000);
+      };
+      ws.onerror = function (err) {
+        setSmallDynamicIsland({
+          color: "red",
+          text: "Terjadi kesalahan",
+        });
+        setTimeout(() => {
+          ws.close();
+          window.location.reload(true);
+        }, 5000);
+      };
+    }
+
+    window.onerror = function (message, source, lineno, colno) {
+      const logs = {
+        log_type: "error",
+        message: {
+          message: message,
+          source: source,
+          lineno: lineno,
+          colno: colno,
+          lastEvent: lastEvent,
+        },
+      };
+      try {
+        ws?.send(JSON.stringify(logs));
+        setTimeout(() => {}, 1500);
+      } catch (error) {
+        window.reload(true);
+      }
+    };
+
+    function onMessageWS(event) {
+      let trx = event.data.split(" - ");
+      trx = trx[1];
+
+      if (condition.includes(trx.toString().toLowerCase())) return true;
+      trx = JSON.parse(trx);
+      lastEvent = trx;
+      let state = trx.state;
+      let values = trx.values;
+
+      switch (state) {
+        case "IDLE":
+          exitAnimation("overlayDynamicIsland");
+          exitAnimation("OpenGateInEvent");
+          exitAnimation("QRISuccessGateOutEvent");
+          exitAnimation("MemberGateOutEvent");
+          exitAnimation("EmoneyProcessGateOutEvent");
+          exitAnimation("EmoneySuccessGateOutEvent");
+          resetIsland("smallDynamicIsland");
+          forceClearInterval();
+          document.getElementById("idleEvent").classList.remove("hidden");
+          document
+            .getElementById("idleEvent")
+            .classList.remove("animate-slide-down");
+          document
+            .getElementById("idleEvent")
+            .classList.remove("animate-slide-up");
+          document.getElementById("idleEvent").style.display = "block";
+          setSmallDynamicIsland({ color: "green", text: LOCATION_NAME ?? "" });
+          console.log(values);
+          if (values.vehicle_code) {
+            processRenderPrice(values);
+            enterAnimation("parkingInformation");
+          } else {
+            exitAnimation("parkingInformation");
+          }
+          break;
+
+        case "LOADING":
+          setLargeDynamicIsland({
+            text: ["Mohon tunggu, kami sedang", "mencari transaksi anda"],
+          });
+          expandIsland("smallDynamicIsland", "largeDynamicIsland");
+          break;
+
+        case "GATE_OPEN":
+          enterAnimation("OpenGateInEvent");
+          generateCaptionGate({
+            caption: LOCATION_NAME ?? "",
+          });
+          generateAdvertisingGateIn();
+          break;
+
+        case "MEMBER_SUCCESS_IN":
+          enterAnimation("OpenGateInEvent");
+          generateCaptionGate({
+            isShowMember:
+              typeof hideMembershipLeft === "number" &&
+              hideMembershipLeft === 1,
+            isShowRFID: true,
+            greeting: "Selamat Datang",
+            caption: LOCATION_NAME ?? "",
+            dayLeftIn: values.days_left,
+            rfidIn: values.rfid,
+          });
+          generateAdvertisingGateIn();
+          break;
+
+        case "MEMBER_SUCCESS_OUT":
+          enterAnimation("OpenGateInEvent");
+          generateCaptionGate({
+            isShowMember:
+              typeof hideMembershipLeft === "number" &&
+              hideMembershipLeft === 1,
+            isShowRFID: true,
+            greeting: "Selesai",
+            caption: "Terima kasih, Selamat Jalan!",
+            isExitMember: true,
+            subCaption:
+              "Tetap gunakan Helm dan Sabuk Pengaman Anda Saat Berkendara. ",
+            caption: LOCATION_NAME ?? "",
+            dayLeftIn: values.days_left,
+            rfidIn: values.rfid,
+          });
+          generateAdvertisingGateIn();
+          break;
+
+        case "GRACE_PERIOD":
+          enterAnimation("OpenGateInEvent");
+          generateCaptionGate({
+            isShowMember: false,
+            isShowRFID: true,
+            isExitMember: false,
+            subCaption:
+              "Tetap gunakan Helm dan Sabuk Pengaman Anda Saat Berkendara. ",
+            caption: LOCATION_NAME ?? "",
+            dayLeftIn: values.days_left,
+            rfidIn: values.rfid,
+          });
+          generateAdvertisingGateIn();
+          break;
+
+        case "EMONEY_PROCESS":
+          shrinkIsland("largeDynamicIsland", "smallDynamicIsland");
+          setSmallDynamicIsland({
+            color: "yellow",
+            text: "Tempelkan Kartu Elektronik",
+          });
+          exitAnimation("idleEvent");
+          enterAnimation("EmoneyProcessGateOutEvent");
+          generateBillEmoneyProcess({
+            transaction: values,
+            spotName: LOCATION_NAME ?? "",
+            spotAdress: LOCATION_ADDRESS ?? "",
+          });
+          break;
+
+        case "EMONEY_SUCCESS":
+          shrinkIsland("largeDynamicIsland", "smallDynamicIsland");
+          setSmallDynamicIsland({
+            color: "green",
+            text: "Pembayaran Berhasil",
+          });
+          exitAnimation("EmoneyProcessGateOutEvent");
+          enterAnimation("EmoneySuccessGateOutEvent");
+          generateBillEmoneySuccess({
+            cardInfo: values,
+            spotName: LOCATION_NAME ?? "",
+            spotAdress: LOCATION_ADDRESS ?? "",
+          });
+          break;
+
+        case "QRIS_PROCESS":
+          setLargeDynamicIsland({
+            text: ["Mohon tunggu, kami sedang", "menyiapkan qris anda"],
+          });
+          expandIsland("smallDynamicIsland", "largeDynamicIsland");
+          exitAnimation("EmoneyProcessGateOutEvent");
+          enterAnimation("QRISGateOutEvent");
+          generateBillQRISProcess({
+            spotName: LOCATION_NAME ?? "",
+            spotAdress: LOCATION_ADDRESS ?? "",
+          });
+          break;
+
+        case "QRIS_CREATED":
+          shrinkIsland("largeDynamicIsland", "smallDynamicIsland");
+          setSmallDynamicIsland({
+            color: "yellow",
+            text: "Scan QR untuk Bayar",
+          });
+          generateBillQRISCreated({
+            qrisData: values,
+            spotName: LOCATION_NAME ?? "",
+            spotAdress: LOCATION_ADDRESS ?? "",
+          });
+          break;
+
+        case "QRIS_SUCCESS":
+          shrinkIsland("largeDynamicIsland", "smallDynamicIsland");
+          setSmallDynamicIsland({
+            color: "green",
+            text: "Pembayaran Berhasil",
+          });
+          exitAnimation("QRISGateOutEvent");
+          enterAnimation("QRISuccessGateOutEvent");
+          generateSuccessPaymentQRIS({
+            spotName: LOCATION_NAME ?? "",
+            spotAdress: LOCATION_ADDRESS ?? "",
+          });
+          break;
+
+        case "MEMBER_NOT_FOUND":
+          resetIsland("extraLargeDynamicIsland");
+          enterAnimation("overlayDynamicIsland");
+          setExtraLargeDynamicIsland({
+            title: "Member Tidak Ditemukan",
+            content:
+              "Kartu member yang anda gunakan tidak terdaftar di lokasi, mohon gunakan kartu yang terdaftar!",
+            type: "MEMBER_ERROR",
+            hasBadge: true,
+            badge: `RFID: ${values.rfid}`,
+            badgeBackgroundColor: "gray",
+            badgeTextColor: "black",
+          });
+          break;
+
+        case "MEMBER_WAS_INSIDE":
+          resetIsland("extraLargeDynamicIsland");
+          enterAnimation("overlayDynamicIsland");
+          setExtraLargeDynamicIsland({
+            title: "Member Sudah Di Dalam",
+            content:
+              "Kartu member yang anda gunakan sudah digunakan pada transaksi sebelumnya, silakan tap kartu di pintu keluar!",
+            type: "MEMBER_ERROR",
+            hasBadge: true,
+            badge: `RFID: ${values.rfid}`,
+            badgeBackgroundColor: "gray",
+            badgeTextColor: "black",
+          });
+          break;
+
+        case "MEMBER_WAS_OUTSIDE":
+          resetIsland("extraLargeDynamicIsland");
+          enterAnimation("overlayDynamicIsland");
+          setExtraLargeDynamicIsland({
+            title: "Member Sudah Di Luar",
+            content:
+              "Kartu member yang anda gunakan sudah digunakan pada transaksi sebelumnya, silakan tap kartu di pintu masuk!",
+            type: "MEMBER_ERROR",
+            hasBadge: true,
+            badge: `RFID: ${values.rfid}`,
+            badgeBackgroundColor: "gray",
+            badgeTextColor: "black",
+          });
+          break;
+
+        case "TIMEOUT":
+          resetIsland("extraLargeDynamicIsland");
+          enterAnimation("overlayDynamicIsland");
+          setExtraLargeDynamicIsland({
+            title: "Waktu Pembayaran Habis!",
+            content:
+              "Waktu pembayaran telah habis, mohon scan tiket parkir anda kembali.",
+            type: "MEMBER_ERROR",
+            hasBadge: false,
+          });
+          break;
+
+        case "LOOP1_NOT_DETECTED":
+          resetIsland("extraLargeDynamicIsland");
+          enterAnimation("overlayDynamicIsland");
+          setExtraLargeDynamicIsland({
+            title: "Loop 1 Tidak Terdeteksi!",
+            content:
+              "Terjadi permasalahan pada sistem, kami akan mmemperbaiki segera.",
+            type: "MEMBER_ERROR",
+            hasBadge: false,
+          });
+          break;
+
+        case "LOOP2_NOT_DETECTED":
+          resetIsland("extraLargeDynamicIsland");
+          enterAnimation("overlayDynamicIsland");
+          setExtraLargeDynamicIsland({
+            title: "Loop 2 Tidak Terdeteksi!",
+            content:
+              "Terjadi permasalahan pada sistem, kami akan mmemperbaiki segera.",
+            type: "MEMBER_ERROR",
+            hasBadge: false,
+          });
+          break;
+
+        case "GENERAL_ERROR":
+          resetIsland("extraLargeDynamicIsland");
+          enterAnimation("overlayDynamicIsland");
+          setExtraLargeDynamicIsland({
+            title: values.message,
+            type: "MEMBER_ERROR",
+            content: "Nampaknya terdapat masalah, ",
+            hasBadge: false,
+          });
+          break;
+      }
+    }
+  </script>
+</html>

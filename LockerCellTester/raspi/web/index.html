@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Locker Cell Tester</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="2" width="18" height="20" rx="2"/><path d="M12 2v20M8 10v2M16 10v2"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Locker Cell Tester</h1>
+        <p>Raspberry Pi 4B &middot; ESP32-S3 &middot; RS485</p>
+      </div>
+    </div>
+    <span class="sim-badge" id="simBadge">MODE SIMULASI</span>
+    <div class="link connecting" id="link">
+      <span class="dot"></span>
+      <div class="link-text">
+        <b id="linkTitle">MENGHUBUNGKAN…</b>
+        <small id="linkSub">—</small>
+      </div>
+    </div>
+    <div class="clock">
+      <div class="time" id="clockTime">--:--:--</div>
+      <div class="date" id="clockDate">&nbsp;</div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="cabinet" aria-label="Kabinet locker">
+      <div class="banner" id="banner" role="status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <span id="bannerText">Menghubungi ESP32…</span>
+      </div>
+      <div class="cabinet-frame" id="grid"></div>
+    </section>
+
+    <aside class="side">
+      <section class="panel">
+        <h2>Ringkasan</h2>
+        <div class="tiles">
+          <div class="tile t-open"><div class="v" id="sumOpen">0<small>/10</small></div><div class="k">Pintu terbuka</div></div>
+          <div class="tile t-led"><div class="v" id="sumLed">0</div><div class="k">LED aktif</div></div>
+          <div class="tile t-sol"><div class="v" id="sumSol">0</div><div class="k">Solenoid aktif</div></div>
+          <div class="tile t-pass"><div class="v" id="sumPass">0<small>/10</small></div><div class="k" id="sumPassK">Test lulus</div></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Kontrol</h2>
+        <div class="controls">
+          <button class="btn btn-all" id="btnAll" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>
+            Buka Semua (berurutan)
+          </button>
+          <button class="btn btn-stop" id="btnStop" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+            STOP
+          </button>
+          <button class="btn btn-ghost" id="btnReset" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+            Reset Test
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Komunikasi RS485 <span id="commAddr"></span></h2>
+        <dl class="kv">
+          <div><dt>Port</dt><dd id="kvPort">—</dd></div>
+          <div><dt>Baudrate</dt><dd id="kvBaud">—</dd></div>
+          <div><dt>Firmware</dt><dd id="kvFw">—</dd></div>
+          <div><dt>Uptime ESP32</dt><dd id="kvUptime">—</dd></div>
+          <div><dt>Respon (RTT)</dt><dd id="kvRtt">—</dd></div>
+          <div><dt>Paket TX / RX</dt><dd id="kvTxRx">—</dd></div>
+          <div><dt>Timeout</dt><dd id="kvTimeout">—</dd></div>
+          <div><dt>CRC error</dt><dd id="kvCrc">—</dd></div>
+        </dl>
+      </section>
+
+      <section class="panel panel-log">
+        <h2>Log Aktivitas <span id="logCount"></span></h2>
+        <ol class="log" id="log"></ol>
+      </section>
+    </aside>
+  </main>
+
+  <div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <h3 id="modalTitle">Buka semua cell?</h3>
+      <p id="modalText">Semua cell akan dibuka satu per satu (±1 detik per cell). Pastikan area di depan pintu aman.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="modalCancel" type="button">Batal</button>
+        <button class="btn btn-all" id="modalOk" type="button">Ya, buka semua</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+[Unit]
+Description=Locker Cell Tester (master RS485 + web UI)
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+SupplementaryGroups=dialout
+WorkingDirectory=/home/pi/LockerCellTester/raspi
+ExecStart=/usr/bin/python3 "/home/pi/LockerCellTester/raspi/app.py"
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

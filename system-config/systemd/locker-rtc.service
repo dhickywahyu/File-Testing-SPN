@@ -1,0 +1,16 @@
+[Unit]
+Description=Jam sistem dari RTC DS3231 (boot) & simpan ke RTC (shutdown)
+DefaultDependencies=no
+After=systemd-udev-trigger.service systemd-modules-load.service
+Before=time-sync.target sysinit.target shutdown.target
+Wants=time-sync.target
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/locker-rtc load
+ExecStop=/usr/local/sbin/locker-rtc save
+
+[Install]
+WantedBy=sysinit.target

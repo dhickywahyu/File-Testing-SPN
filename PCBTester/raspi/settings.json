@@ -1,0 +1,12 @@
+{
+  "relay_on_s": 1.0,
+  "relay_off_s": 0.8,
+  "disp_mode": "step",
+  "disp_text": "TEST DISPLAY MAX7219 32x8 - OK",
+  "disp_brightness": 4,
+  "disp_rotation": 180,
+  "disp_flip": false,
+  "disp_reverse": true,
+  "disp_scroll_ms": 45,
+  "operator": ""
+}
